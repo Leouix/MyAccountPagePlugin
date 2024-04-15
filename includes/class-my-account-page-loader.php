@@ -51,7 +51,17 @@ class My_Account_Page_Loader {
 		$this->actions = array();
 		$this->filters = array();
 
+        add_action('template_include', [$this, 'showPluginContent']);
 	}
+
+    public function showPluginContent($template)
+    {
+        global $wp;
+        $current_slug = $wp->request;
+        if ($current_slug === 'my-account') {
+            include_once( WP_PLUGIN_DIR . '/my-account-page/public/partials/my-account-page-public-display.php' );
+        }
+    }
 
 	/**
 	 * Add a new action to the collection to be registered with WordPress.
