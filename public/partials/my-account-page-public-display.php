@@ -14,4 +14,9 @@
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
-<h1>My Account</h1>
+
+<div id="main-tabs">
+    <div class="main-tabs-item">My Comments</div>
+    <div class="main-tabs-item">Users</div>
+    <div class="main-tabs-item">Info</div>
+</div>
