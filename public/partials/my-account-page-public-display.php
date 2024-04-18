@@ -14,11 +14,20 @@
 ?>
 
 <div id="main-tabs">
-    <div class="main-tabs-item active"><div class="text">My Comments</div></div>
-    <div class="main-tabs-item"><div class="text">Users</div></div>
-    <div class="main-tabs-item"><div class="text">Info</div></div>
+    <div id="tab-button-1"
+         class="main-tabs-item active"
+         onclick="clickHandle(this)">
+        <div class="text">My Comments</div>
+    </div>
+    <div id="tab-button-2"
+         class="main-tabs-item"
+         onclick="clickHandle(this)">
+        <div class="text">Users</div>
+    </div>
+    <div id="tab-button-3"
+         class="main-tabs-item"
+         onclick="clickHandle(this)">
+        <div class="text">Info</div>
+    </div>
 </div>
 
-<button id="tab-button-1" onclick="clickHandle(this)">Click 1</button>
-<button id="tab-button-2" onclick="clickHandle(this)">Click 2</button>
-<button id="tab-button-3" onclick="clickHandle(this)">Click 3</button>
