@@ -173,21 +173,12 @@ class My_Account_Page {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
-		$this->loader->add_action( 'wp_ajax_addItemAJAX', $this, 'wp_ajax_addItemAJAX' );
-		$this->loader->add_action('wp_enqueue_scripts', $this, 'my_load_scripts');
+		$this->loader->add_action( 'wp_ajax_switchTabAjax', $this, 'wp_ajax_switchTabAjax' );
 	}
 
-	public function wp_ajax_addItemAJAX() {
-
+	public function wp_ajax_switchTabAjax() {
 		echo $_POST["tabName"];
 		wp_die();
-	}
-
-	function my_load_scripts()
-	{
-//		wp_localize_script(
-//			'my_ajax-script', 'ajaxObj', array( 'ajax_url' => admin_url( 'admin-ajax.php' )
-//		));
 	}
 
 	/**

@@ -1,6 +1,6 @@
 console.log('js file')
 
-function clickHandle(el) {
+function switchTab(el) {
     toSend({
         clickId: el.id
     })
@@ -11,8 +11,8 @@ function toSend(clickData) {
     const { clickId } = clickData
 
     const formData =  new FormData;
-    formData.append('tabName', TabsSwitcher.getTabName(clickId));
-    formData.append('action', 'addItemAJAX');
+    formData.append('tabName', TabsSwitcherHelper.getTabName(clickId));
+    formData.append('action', 'switchTabAjax');
 
     const xhr = new XMLHttpRequest();
     xhr.open('POST', "/wp-admin/admin-ajax.php", true);
@@ -27,7 +27,7 @@ function toSend(clickData) {
     xhr.send(formData);
 }
 
-class TabsSwitcher {
+class TabsSwitcherHelper {
     static tabs = {
         "tab-button-1": "my-comments",
         "tab-button-2": "users",
