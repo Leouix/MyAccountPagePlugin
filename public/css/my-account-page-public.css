@@ -2,3 +2,30 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
+
+#main-tabs {
+    display: flex;
+
+}
+
+#main-tabs .main-tabs-item {
+    width: 45px;
+    height: 110px;
+    border: 1px solid #fff;
+    border-radius: 4px;
+    background: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#main-tabs .main-tabs-item.active {
+    background: #4e84ff;
+    height: 130px;
+}
+
+#main-tabs .main-tabs-item .text {
+    rotate: -90deg;
+    width: 100%;
+    margin-bottom: -35px;
+}

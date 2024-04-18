@@ -57,6 +57,29 @@ class My_Account_Page_Activator {
 
     private static function createMyAccountPage()
     {
+        $check_page_exist = self::get_page_my_account();
+        if($check_page_exist === null) {
+            wp_insert_post(
+                array(
+                    'comment_status' => 'close',
+                    'ping_status'    => 'close',
+                    'post_author'    => 1,
+                    'post_title'     => ucwords('my-account'),
+                    'post_name'      => strtolower(str_replace(' ', '-', trim('my-account'))),
+                    'post_status'    => 'publish',
+                    'post_content'   => '',
+                    'post_type'      => 'page'
+                )
+            );
+        }
+    }
 
+    private static function get_page_my_account($title="my-account") {
+        $pages = get_posts( [
+            'title'     => $title,
+            'post_type' => 'page',
+        ] );
+
+        return ! empty( $pages[0] ) ? get_post( $pages[0]->ID) : null;
     }
 }

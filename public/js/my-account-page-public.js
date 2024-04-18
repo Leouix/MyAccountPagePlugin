@@ -1,32 +1,35 @@
-(function( $ ) {
-	'use strict';
+console.log('js file')
 
-	/**
-	 * All of the code for your public-facing JavaScript source
-	 * should reside in this file.
-	 *
-	 * Note: It has been assumed you will write jQuery code here, so the
-	 * $ function reference has been prepared for usage within the scope
-	 * of this function.
-	 *
-	 * This enables you to define handlers, for when the DOM is ready:
-	 *
-	 * $(function() {
-	 *
-	 * });
-	 *
-	 * When the window is loaded:
-	 *
-	 * $( window ).load(function() {
-	 *
-	 * });
-	 *
-	 * ...and/or other possibilities.
-	 *
-	 * Ideally, it is not considered best practise to attach more than a
-	 * single DOM-ready or window-load handler for a particular page.
-	 * Although scripts in the WordPress core, Plugins and Themes may be
-	 * practising this, we should strive to set a better example in our own work.
-	 */
+function clickHandle(el) {
+    toSend(el.id)
+}
 
-})( jQuery );
+function toSend(clickId) {
+
+    const formData =  new FormData;
+    formData.append('tabName', TabsSwitcher.getTabName(clickId));
+    formData.append('action', 'addItemAJAX');
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', "/wp-admin/admin-ajax.php", true);
+    xhr.onreadystatechange = function (res) {
+        if (this.readyState === 4 && this.status === 200) {
+            console.log(this.response);
+        }
+        if (this.readyState === 4 && this.status === 404){
+            console.log('An error occurred')
+        }
+    }
+    xhr.send(formData);
+}
+
+class TabsSwitcher {
+    static tabs = {
+        "tab-button-1": "my-comments",
+        "tab-button-2": "users",
+        "tab-button-3": "info",
+    }
+    static getTabName(buttonId) {
+        return this.tabs[buttonId]
+    }
+}
