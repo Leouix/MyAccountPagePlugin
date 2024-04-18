@@ -1,10 +1,14 @@
 console.log('js file')
 
 function clickHandle(el) {
-    toSend(el.id)
+    toSend({
+        clickId: el.id
+    })
 }
 
-function toSend(clickId) {
+function toSend(clickData) {
+
+    const { clickId } = clickData
 
     const formData =  new FormData;
     formData.append('tabName', TabsSwitcher.getTabName(clickId));
