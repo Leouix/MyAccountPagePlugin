@@ -60,7 +60,7 @@ class My_Account_Page_Loader {
         $current_slug = $wp->request;
 
         if ($current_slug === 'my-account') {
-            include_once WP_PLUGIN_DIR . '/my-account-page/public/partials/my-account-page-public-display.php';
+            return WP_PLUGIN_DIR . '/my-account-page/public/partials/my-account-page-public-display.php';
         }
 
 	    return $template;

@@ -170,8 +170,10 @@ class My_Account_Page {
 
 		$plugin_public = new My_Account_Page_Public( $this->get_plugin_name(), $this->get_version() );
 
+		if ($_SERVER["REQUEST_URI"] === '/my-account/') {
+			$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		}
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
 		$this->loader->add_action( 'wp_ajax_switchTabAjax', $this, 'wp_ajax_switchTabAjax' );
 	}
