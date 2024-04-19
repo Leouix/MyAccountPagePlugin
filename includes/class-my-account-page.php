@@ -241,9 +241,10 @@ class My_Account_Page {
 		}
 	}
 
-	private function getInfoTab() {
+	private function getInfoTab()
+	{
 		$userData = $this->getUserData($this->current_user);
-		return include(plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/tab-info.php');
+		return include plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/tab-info.php';
 	}
 
 	private function postInfoTab() {
