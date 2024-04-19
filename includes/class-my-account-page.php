@@ -178,9 +178,72 @@ class My_Account_Page {
 		$this->loader->add_action( 'wp_ajax_switchTabAjax', $this, 'wp_ajax_switchTabAjax' );
 	}
 
+	/** @noinspection PhpUnreachableStatementInspection */
 	public function wp_ajax_switchTabAjax() {
-		echo $_POST["tabName"];
+
+		if (empty($_POST['tabName'])) return false;
+
+		switch ($_POST['tabName']) {
+			case "users":
+				return $this->usersTab();
+			case "my-comments":
+				return $this->myCommentsTab();
+			case "info":
+				return $this->infoTab();
+			default:
+				return false;
+		}
+
 		wp_die();
+	}
+
+	public function usersTab() {
+		return include plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/tab-users.php';
+	}
+
+	public function myCommentsTab() {
+		return include plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/tab-my-comments.php';
+	}
+
+	public function infoTab() {
+
+		$current_user = wp_get_current_user();
+
+		if ($_POST['actionWanted'] === 'toGet') {
+			$this->getInfoTab($current_user);
+		} else if ($_POST['actionWanted'] === 'toPost') {
+			$this->postInfoTab($current_user);
+		}
+	}
+
+	private function getInfoTab($current_user) {
+		$userData = $this->getUserData($current_user->ID);
+		return include plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/tab-info.php';
+	}
+
+	private function postInfoTab($current_user) {
+
+	}
+
+	private function getUserData($userId) {
+
+		$userMeta = get_user_meta($userId);
+		$userData = get_userdata($userId);
+
+		$data = new stdClass();
+		$data->ID              = $userData->ID;
+		$data->user_login      = $userData->user_login;
+		$data->user_nicename   = $userData->user_nicename;
+		$data->user_email      = $userData->user_email;
+		$data->user_registered = $userData->user_registered;
+		$data->display_name    = $userData->display_name;
+		$data->user_url        = $userData->user_url;
+		$data->nickname        = $userMeta->nickname;
+		$data->first_name      = $userMeta->first_name;
+		$data->last_name       = $userMeta->last_name;
+		$data->description     = $userMeta->description;
+
+		return $data;
 	}
 
 	/**
