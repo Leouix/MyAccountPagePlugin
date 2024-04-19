@@ -56,6 +56,10 @@ class My_Account_Page {
 	 * @var      string    $version    The current version of the plugin.
 	 */
 	protected $version;
+	/**
+	 * @var mixed
+	 */
+	private $current_user;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -175,26 +179,50 @@ class My_Account_Page {
 		}
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 
-		$this->loader->add_action( 'wp_ajax_switchTabAjax', $this, 'wp_ajax_switchTabAjax' );
+		$this->loader->add_action( 'wp_ajax_switchTabAjax', $this, 'switchTabAjax' );
+
+		$this->loader->add_action( 'rest_api_init', $this,  'routeReg');
+
 	}
 
-	/** @noinspection PhpUnreachableStatementInspection */
-	public function wp_ajax_switchTabAjax() {
+	public function routeReg() {
+		register_rest_route( 'my-account/v1', '/switchTabAjax/', array(
+			'methods' => 'POST',
+			'callback' => [$this, 'switchTabAjax'],
+			'permission_callback' => '__return_true',
+			'login_user_id' => get_current_user_id(),
+		) );
+	}
 
-		if (empty($_POST['tabName'])) return false;
+	/**
+	 * @throws Exception
+	 */
+	public function switchTabAjax($request) {
+
+		$this->validate($request);
+
+		ob_start();
 
 		switch ($_POST['tabName']) {
 			case "users":
-				return $this->usersTab();
+				$this->usersTab();
+				break;
 			case "my-comments":
-				return $this->myCommentsTab();
+				$this->myCommentsTab();
+				break;
 			case "info":
-				return $this->infoTab();
+				$this->infoTab();
+				break;
 			default:
 				return false;
 		}
 
-		wp_die();
+		$data = ob_get_contents();
+		ob_end_clean();
+
+		return new WP_REST_Response( array(
+			'html' => $data,
+		) );
 	}
 
 	public function usersTab() {
@@ -206,23 +234,20 @@ class My_Account_Page {
 	}
 
 	public function infoTab() {
-
-		$current_user = wp_get_current_user();
-
 		if ($_POST['actionWanted'] === 'toGet') {
-			$this->getInfoTab($current_user);
+			return $this->getInfoTab();
 		} else if ($_POST['actionWanted'] === 'toPost') {
-			$this->postInfoTab($current_user);
+			return $this->postInfoTab();
 		}
 	}
 
-	private function getInfoTab($current_user) {
-		$userData = $this->getUserData($current_user->ID);
-		return include plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/tab-info.php';
+	private function getInfoTab() {
+		$userData = $this->getUserData($this->current_user);
+		return include(plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/tab-info.php');
 	}
 
-	private function postInfoTab($current_user) {
-
+	private function postInfoTab() {
+		return 1;
 	}
 
 	private function getUserData($userId) {
@@ -238,10 +263,10 @@ class My_Account_Page {
 		$data->user_registered = $userData->user_registered;
 		$data->display_name    = $userData->display_name;
 		$data->user_url        = $userData->user_url;
-		$data->nickname        = $userMeta->nickname;
-		$data->first_name      = $userMeta->first_name;
-		$data->last_name       = $userMeta->last_name;
-		$data->description     = $userMeta->description;
+		$data->nickname        = $userMeta["nickname"][0];
+		$data->first_name      = $userMeta["first_name"][0];
+		$data->last_name       = $userMeta["last_name"][0];
+		$data->description     = $userMeta["description"][0];
 
 		return $data;
 	}
@@ -284,6 +309,23 @@ class My_Account_Page {
 	 */
 	public function get_version() {
 		return $this->version;
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	private function validate( $request ) {
+		$attrs =  $request->get_attributes();
+
+		if ( empty($attrs['login_user_id']) ) {
+			throw new Exception('Login User ID is required.');
+		}
+
+		if (empty($_POST['tabName'])) {
+			throw new Exception('Tab Name is required.');
+		}
+
+		$this->current_user = $attrs['login_user_id'];
 	}
 
 }

@@ -21,11 +21,13 @@ function toSend(clickData) {
     formData.append('action', 'switchTabAjax');
 
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', "/wp-admin/admin-ajax.php", true);
+    // xhr.open('POST', "/wp-admin/admin-ajax.php", true);
+    xhr.open('POST', "/wp-json/my-account/v1/switchTabAjax/", true);
     xhr.onreadystatechange = function (res) {
         if (this.readyState === 4 && this.status === 200) {
-            console.log(this)
-            containerResults.innerHTML = this.response
+           // console.log(this.response)
+            let json = JSON.parse(this.response)
+            containerResults.innerHTML = json.html
         }
         if (this.readyState === 4 && this.status === 404){
             console.log('An error occurred')
@@ -33,8 +35,6 @@ function toSend(clickData) {
     }
     xhr.send(formData);
 }
-
-let isFormChanged = false;
 
 function editingUserData(el) {
 
