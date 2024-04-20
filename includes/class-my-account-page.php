@@ -178,11 +178,10 @@ class My_Account_Page {
 			$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 		}
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-
 		$this->loader->add_action( 'wp_ajax_switchTabAjax', $this, 'switchTabAjax' );
-
 		$this->loader->add_action( 'rest_api_init', $this,  'routeReg');
 
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_class_user_data' );
 	}
 
 	public function routeReg() {
@@ -193,6 +192,8 @@ class My_Account_Page {
 			'login_user_id' => get_current_user_id(),
 		) );
 	}
+
+
 
 	/**
 	 * @throws Exception
