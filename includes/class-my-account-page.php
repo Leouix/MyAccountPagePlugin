@@ -177,10 +177,9 @@ class My_Account_Page {
 		if ($_SERVER["REQUEST_URI"] === '/my-account/') {
 			$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 		}
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_ajax_switchTabAjax', $this, 'switchTabAjax' );
-		$this->loader->add_action( 'rest_api_init', $this,  'routeReg');
 
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
+		$this->loader->add_action( 'rest_api_init', $this,  'routeReg');
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_class_user_data' );
 	}
 
@@ -191,9 +190,26 @@ class My_Account_Page {
 			'permission_callback' => '__return_true',
 			'login_user_id' => get_current_user_id(),
 		) );
+
+		register_rest_route( 'my-account/v1', '/user-tab/', array(
+			'methods' => 'POST',
+			'callback' => [$this, 'userTabPage'],
+			'permission_callback' => '__return_true',
+			'login_user_id' => get_current_user_id(),
+		) );
 	}
 
 
+	public function userTabPage($request) {
+		$attrs =  $request->get_attributes();
+
+		var_dump($attrs);
+
+		if ( empty($attrs['login_user_id']) ) {
+			return false;
+		}
+
+	}
 
 	/**
 	 * @throws Exception

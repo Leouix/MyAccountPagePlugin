@@ -101,7 +101,7 @@ class My_Account_Page_Public {
 	}
 
 	public function enqueue_class_user_data() {
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/UserDataForm.js', array(), $this->version, false );
+		wp_enqueue_script( 'user-data-form-class', plugin_dir_url( __FILE__ ) . 'js/UserDataForm.js', array(), $this->version, false );
 	}
 
 }
