@@ -23,7 +23,7 @@ function userFormSubmit(elForm) {
     const formData = new FormData(elForm)
 
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', "/wp-json/my-account/v1/user-tab/", true);
+    xhr.open('POST', "/wp-json/my-account/v1/info-tab/", true);
     xhr.onreadystatechange = function (res) {
         if (this.readyState === 4 && this.status === 200) {
             console.log(this.response)
@@ -43,6 +43,7 @@ function switchTab(el) {
         clickId: el.id
     })
 }
+
 function getPage(clickData) {
 
     const { clickId } = clickData
@@ -79,10 +80,6 @@ function toggleBtn(isFormChanged) {
         isFormChanged ? formUserButton.style.display = 'block' : formUserButton.style.display = 'none'
     }
 }
-
-
-
-
 
 class TabsSwitcherHelper {
     static tabs = {

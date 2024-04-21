@@ -104,6 +104,8 @@
                 value="<?php echo $userData->description; ?>"
     </div>
 
+    <input type="hidden" name="ID" value="<?php echo $userData->ID; ?>">
+
     <input id="form-user-button" type="submit" value="Save">
 
 </form>

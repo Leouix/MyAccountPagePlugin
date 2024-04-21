@@ -52,6 +52,7 @@ class My_Account_Page_Loader {
 		$this->filters = array();
 
         add_action('template_include', [$this, 'showPluginContent']);
+      //  add_action('init', [$this, 'showPluginContent']);
 	}
 
     public function showPluginContent($template)
