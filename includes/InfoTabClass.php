@@ -4,7 +4,10 @@ namespace MyAccountPagePlugin;
 
 class InfoTabClass {
 
-	public function __construct() {
+	private $loggedUserId;
+
+	public function __construct($loggedUserId) {
+		$this->loggedUserId = $loggedUserId;
 	}
 
 	/**
@@ -22,7 +25,7 @@ class InfoTabClass {
 		$this->updateUserMeta($userId, $userMeta);
 
 		$userData = array(
-			'ID' => $userFields["ID"],
+			'ID' => $this->loggedUserId,
 			'user_nicename' => $userFields["user_nicename"],
 			'user_email' => $userFields["user_email"],
 			'user_registered' => $userFields["user_registered"],

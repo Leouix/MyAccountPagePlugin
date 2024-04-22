@@ -13,6 +13,7 @@
  * @subpackage My_Account_Page/includes
  */
 
+use AdminSettings\AdminSettingsClass;
 use MyAccountPagePlugin\InfoTabClass;
 
 /**
@@ -129,6 +130,7 @@ class My_Account_Page {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-my-account-page-public.php';
 
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/InfoTabClass.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/AdminSettingsClass.php';
 
 		$this->loader = new My_Account_Page_Loader();
 
@@ -164,7 +166,15 @@ class My_Account_Page {
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_action( 'admin_menu', $this, 'add_menu_page_my_account_page' );
+	}
 
+
+	public function add_menu_page_my_account_page() {
+		add_menu_page('My Account Page', 'My Account Page', 'administrator', 'my-account-page-slug', [$this, 'my_account_settings_page'],'dashicons-admin-generic');
+	}
+	public function my_account_settings_page() {
+		include plugin_dir_path( dirname( __FILE__ ) ) . 'includes/AdminSettingsPage.php';
 	}
 
 	/**
@@ -201,8 +211,23 @@ class My_Account_Page {
 			'permission_callback' => '__return_true',
 			'login_user_id'       => get_current_user_id(),
 		) );
+
+		register_rest_route( 'my-account/v1', '/admin-save-page-settings/', array(
+			'methods'             => 'POST',
+			'callback'            => [ $this, 'adminSavePageSettings' ],
+			'permission_callback' => '__return_true',
+		) );
 	}
 
+	/**
+	 * @throws Exception
+	 */
+	public function adminSavePageSettings($request) {
+
+		$postData = $_POST;
+		AdminSettingsClass::validateInputData($postData);
+		AdminSettingsClass::save($postData);
+	}
 
 	/**
 	 * @throws Exception
@@ -216,7 +241,6 @@ class My_Account_Page {
 		}
 
 		$userData = array();
-		$userData["ID"]              = $_POST["ID"];
 		$userData["user_nicename"]   = $_POST["user_nicename"];
 		$userData["user_email"]      = $_POST["user_email"];
 		$userData["user_registered"] = $_POST["user_registered"];
@@ -230,7 +254,7 @@ class My_Account_Page {
 		$userId = $attrs['login_user_id'];
 		unset( $attrs['login_user_id'] );
 
-		$infoTabClass = new InfoTabClass;
+		$infoTabClass = new InfoTabClass($userId);
 		$infoTabClass->saveUserInfo( $userId, $userData );
 
 		return true;

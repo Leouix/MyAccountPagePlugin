@@ -31,6 +31,7 @@ class My_Account_Page_Activator {
 	 */
 	public static function activate() {
         self::createDBTable();
+        self::insertPost();
         self::createMyAccountPage();
 	}
 
@@ -40,20 +41,34 @@ class My_Account_Page_Activator {
 
         $charset_collate = $wpdb->get_charset_collate();
 
-        $table_name = $wpdb->prefix."my_account_page";
+        $table_name = $wpdb->prefix."my_account_page_plugin";
 
         $sql = /** @lang text */
             "CREATE TABLE IF NOT EXISTS $table_name (
-          id mediumint(9) NOT NULL AUTO_INCREMENT,
-          time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-          name tinytext NOT NULL,
-          url varchar(255) DEFAULT '' NOT NULL,
-          PRIMARY KEY  (id)
+			id mediumint(9) NOT NULL AUTO_INCREMENT,
+			user_page_url varchar(255) NOT NULL,
+			fields_allowed_json varchar(255) NULL,
+			is_comments_allowed tinyint NULL,
+			is_users_allowed tinyint NULL,
+			PRIMARY KEY  (id)
         ) $charset_collate;";
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta( $sql );
     }
+
+	private static  function insertPost() {
+		global $wpdb;
+		$tablename = $wpdb->prefix."my_account_page_plugin";
+		$wpdb->insert(
+			$tablename,
+			array(
+				'user_page_url' => 'my-account',
+				'fields_allowed_json' => json_encode('')
+			),
+			array('%s','%s'),
+		);
+	}
 
     private static function createMyAccountPage()
     {
