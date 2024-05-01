@@ -36,13 +36,10 @@ class InfoTabClass {
 		);
 
 		try {
-			wp_update_user( $userData );
-			echo 'User profile updated.';
+			return wp_update_user( $userData );
 		} catch ( \Exception $e ) {
 			throw new \Exception($e->getMessage(), $e->getCode());
 		}
-
-		return true;
 	}
 
 	/**
