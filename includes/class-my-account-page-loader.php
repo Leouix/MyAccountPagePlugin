@@ -61,7 +61,10 @@ class My_Account_Page_Loader {
         $current_slug = $wp->request;
 
         if ($current_slug === 'my-account') {
-            return WP_PLUGIN_DIR . '/my-account-page/public/partials/my-account-page-public-display.php';
+	        if (!is_user_logged_in()) {
+		        auth_redirect();
+	        }
+	    return WP_PLUGIN_DIR . '/my-account-page/public/partials/my-account-page-public-display.php';
         }
 
 	    return $template;

@@ -2,12 +2,19 @@
 
 namespace AdminSettings;
 
+use Exception;
+
 class AdminSettingsClass {
 
-	public function __construct() {
+	/**
+	 * @throws Exception
+	 */
+	static public function handleSaving($postData) {
+		self::validateInputData($postData);
+		self::save($postData);
 	}
 
-	static public function save($postData) {
+	static private function save($postData) {
 
 		$fields_allowed = $postData['show_user_fields_checkbox'] ?? '';
 		$data = array(
@@ -26,9 +33,12 @@ class AdminSettingsClass {
 		);
 	}
 
-	static public function validateInputData($postData) {
+	/**
+	 * @throws Exception
+	 */
+	static private function validateInputData($postData) {
 		if (empty($postData['mya_url'])) {
-			throw new \Exception('Please enter mya_url');
+			throw new Exception('Please enter mya_url');
 		}
 	}
 }

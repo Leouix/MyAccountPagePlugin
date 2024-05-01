@@ -20,9 +20,11 @@ $fields_allowed_array = json_decode($pluginData->fields_allowed_json) !== ''
 <div class="au-container">
 	<form id="admin-user-account-form" onsubmit="saveMyAccountSettingsForm(this)">
 
-		<div class="label-area">
-			<label for="adu-form-input">URL страницы пользователя</label>
-			<input id="adu-form-input" type="text" name="mya_url" value="<?php echo $pluginData->user_page_url; ?>">
+		<div class="label-area url-label-area">
+			<label for="adu-form-input">URL страницы пользователя:</label>
+            <div class="input-url-wrapper">
+	            <span><?php echo get_bloginfo('url'); ?>/</span><input id="adu-form-input" type="text" name="mya_url" value="<?php echo $pluginData->user_page_url; ?>">
+            </div>
 		</div>
 
 		<h4>Какие поля показывать в кабинете пользователя?</h4>
@@ -82,8 +84,17 @@ $fields_allowed_array = json_decode($pluginData->fields_allowed_json) !== ''
 	.au-container {
 		padding: 25px 15px;
 	}
-
     #admin-user-account-form input[type=submit] {
 	    margin-top: 15px;
+    }
+    .url-label-area label {
+        display: block;
+    }
+    .input-url-wrapper {
+        display: inline-block;
+        margin-top: 5px;
+    }
+    .input-url-wrapper span {
+        font-size: 14px;
     }
 </style>

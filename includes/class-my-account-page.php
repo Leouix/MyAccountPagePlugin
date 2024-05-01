@@ -13,8 +13,7 @@
  * @subpackage My_Account_Page/includes
  */
 
-use AdminSettings\AdminSettingsClass;
-use MyAccountPagePlugin\InfoTabClass;
+use MyAccountRoutes\Routes;
 
 /**
  * The core plugin class.
@@ -129,11 +128,11 @@ class My_Account_Page {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-my-account-page-public.php';
 
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/InfoTabClass.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/InfoTabClass.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/AdminSettingsClass.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/Routes.php';
 
 		$this->loader = new My_Account_Page_Loader();
-
 	}
 
 	/**
@@ -169,10 +168,10 @@ class My_Account_Page {
 		$this->loader->add_action( 'admin_menu', $this, 'add_menu_page_my_account_page' );
 	}
 
-
 	public function add_menu_page_my_account_page() {
-		add_menu_page('My Account Page', 'My Account Page', 'administrator', 'my-account-page-slug', [$this, 'my_account_settings_page'],'dashicons-admin-generic');
+		add_menu_page('My Account Page', 'My Account Page', 'administrator', 'my-account-page-admin', [$this, 'my_account_settings_page'],'dashicons-admin-generic');
 	}
+
 	public function my_account_settings_page() {
 		include plugin_dir_path( dirname( __FILE__ ) ) . 'includes/AdminSettingsPage.php';
 	}
@@ -193,143 +192,10 @@ class My_Account_Page {
 		}
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'rest_api_init', $this, 'routeReg' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_class_user_data' );
-	}
 
-	public function routeReg() {
-		register_rest_route( 'my-account/v1', '/switchTabAjax/', array(
-			'methods'             => 'POST',
-			'callback'            => [ $this, 'switchTabAjax' ],
-			'permission_callback' => '__return_true',
-			'login_user_id'       => get_current_user_id(),
-		) );
-
-		register_rest_route( 'my-account/v1', '/info-tab/', array(
-			'methods'             => 'POST',
-			'callback'            => [ $this, 'saveUserInfo' ],
-			'permission_callback' => '__return_true',
-			'login_user_id'       => get_current_user_id(),
-		) );
-
-		register_rest_route( 'my-account/v1', '/admin-save-page-settings/', array(
-			'methods'             => 'POST',
-			'callback'            => [ $this, 'adminSavePageSettings' ],
-			'permission_callback' => '__return_true',
-		) );
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	public function adminSavePageSettings($request) {
-
-		$postData = $_POST;
-		AdminSettingsClass::validateInputData($postData);
-		AdminSettingsClass::save($postData);
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	public function saveUserInfo( $request ) {
-
-		$attrs =  $request->get_attributes();
-
-		if ( empty( $attrs['login_user_id'] ) ) {
-			return false;
-		}
-
-		$userData = array();
-		$userData["user_nicename"]   = $_POST["user_nicename"];
-		$userData["user_email"]      = $_POST["user_email"];
-		$userData["user_registered"] = $_POST["user_registered"];
-		$userData["display_name"]    = $_POST["display_name"];
-		$userData["user_url"]        = $_POST["user_url"];
-		$userData["nickname"]        = $_POST["nickname"];
-		$userData["first_name"]      = $_POST["first_name"];
-		$userData["last_name"]       = $_POST["last_name"];
-		$userData["description"]     = $_POST["description"];
-
-		$userId = $attrs['login_user_id'];
-		unset( $attrs['login_user_id'] );
-
-		$infoTabClass = new InfoTabClass($userId);
-		$infoTabClass->saveUserInfo( $userId, $userData );
-
-		return true;
-	}
-
-
-	/**
-	 * @throws Exception
-	 */
-	public function switchTabAjax($request) {
-
-		$this->validate($request);
-
-		ob_start();
-
-		switch ($_POST['tabName']) {
-			case "users":
-				$this->usersTab();
-				break;
-			case "my-comments":
-				$this->myCommentsTab();
-				break;
-			case "info":
-				$this->infoTab($request->get_attributes());
-				break;
-			default:
-				return false;
-		}
-
-		$data = ob_get_contents();
-		ob_end_clean();
-
-		return new WP_REST_Response( array(
-			'html' => $data,
-		) );
-	}
-
-	public function usersTab() {
-		return include plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/tab-users.php';
-	}
-
-	public function myCommentsTab() {
-		return include plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/tab-my-comments.php';
-	}
-
-	public function infoTab($attrs) {
-		if ($_POST['actionWanted'] === 'toGet') {
-			return $this->getInfoTab();
-		}
-	}
-
-	private function getInfoTab()
-	{
-		$userData = $this->getUserData($this->current_user);
-		return include plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/tab-info.php';
-	}
-
-	private function getUserData($userId) {
-
-		$userMeta = get_user_meta($userId);
-		$userData = get_userdata($userId);
-
-		$data = new stdClass();
-		$data->ID              = $userData->ID;
-		$data->user_nicename   = $userData->user_nicename;
-		$data->user_email      = $userData->user_email;
-		$data->user_registered = $userData->user_registered;
-		$data->display_name    = $userData->display_name;
-		$data->user_url        = $userData->user_url;
-		$data->nickname        = $userMeta["nickname"][0];
-		$data->first_name      = $userMeta["first_name"][0];
-		$data->last_name       = $userMeta["last_name"][0];
-		$data->description     = $userMeta["description"][0];
-
-		return $data;
+		$routesClass = new Routes();
+		$this->loader->add_action( 'rest_api_init', $routesClass, 'routeReg' );
 	}
 
 	/**
@@ -371,22 +237,4 @@ class My_Account_Page {
 	public function get_version() {
 		return $this->version;
 	}
-
-	/**
-	 * @throws Exception
-	 */
-	private function validate( $request ) {
-		$attrs =  $request->get_attributes();
-
-		if ( empty($attrs['login_user_id']) ) {
-			throw new Exception('Login User ID is required.');
-		}
-
-		if (empty($_POST['tabName'])) {
-			throw new Exception('Tab Name is required.');
-		}
-
-		$this->current_user = $attrs['login_user_id'];
-	}
-
 }

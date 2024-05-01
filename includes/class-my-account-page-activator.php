@@ -32,7 +32,7 @@ class My_Account_Page_Activator {
 	public static function activate() {
         self::createDBTable();
         self::insertPost();
-        self::createMyAccountPage();
+        self::createMyAccountPagePublic();
 	}
 
     private static function createDBTable()
@@ -70,7 +70,7 @@ class My_Account_Page_Activator {
 		);
 	}
 
-    private static function createMyAccountPage()
+    private static function createMyAccountPagePublic()
     {
         $check_page_exist = self::get_page_my_account();
         if($check_page_exist === null) {
