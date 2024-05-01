@@ -2,3 +2,34 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+
+.au-container {
+    padding: 25px 15px;
+}
+#admin-user-account-form input[type=submit] {
+    margin-top: 15px;
+}
+.url-label-area label {
+    display: block;
+}
+.input-url-wrapper {
+    display: inline-block;
+    margin-top: 5px;
+}
+.input-url-wrapper span {
+    font-size: 14px;
+}
+
+h4 {
+    margin-bottom: 5px;
+}
+
+.label-area {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.label-area label {
+    margin-bottom: 2px;
+}

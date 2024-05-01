@@ -13,7 +13,7 @@
  * @subpackage My_Account_Page/includes
  */
 
-use AdminSettings\AdminSettingsClass;
+use MyAccountAdmin\AdminSettingsClass;
 use MyAccountRoutes\Routes;
 
 /**
@@ -126,7 +126,7 @@ class My_Account_Page {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-my-account-page-public.php';
 
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/Routes.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/AdminSettingsClass.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/AdminSettingsClass.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/InfoTabClass.php';
 
 		$this->loader = new My_Account_Page_Loader();
@@ -188,7 +188,7 @@ class My_Account_Page {
 
 		$plugin_public = new My_Account_Page_Public( $this->get_plugin_name(), $this->get_version() );
 
-		if ( $_SERVER["REQUEST_URI"] === '/my-account/' ) {
+		if ( AdminSettingsClass::getSettingUrl() !== null && strpos($_SERVER["REQUEST_URI"], AdminSettingsClass::getSettingUrl()) !== false ) {
 			$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 		}
 

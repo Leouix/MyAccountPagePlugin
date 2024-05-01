@@ -2,10 +2,10 @@
 
 namespace MyAccountRoutes;
 
-use AdminSettings\AdminSettingsClass;
-use Exception;
-use MyAccountPagePlugin\InfoTabClass;
+use MyAccountAdmin\AdminSettingsClass;
+use MyAccountPublic\InfoTabClass;
 use WP_REST_Response;
+use Exception;
 
 class Routes {
 

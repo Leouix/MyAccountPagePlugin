@@ -1,6 +1,6 @@
 <?php
 
-namespace MyAccountPagePlugin;
+namespace MyAccountPublic;
 
 use stdClass;
 

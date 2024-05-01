@@ -8,12 +8,12 @@
 ?>
 
 <div class="au-container">
-	<form id="admin-user-account-form" onsubmit="saveMyAccountSettingsForm(this)">
+	<form id="admin-user-account-form">
 
-		<div class="label-area url-label-area">
+		<div class="url-label-area">
 			<label for="adu-form-input">URL страницы пользователя:</label>
             <div class="input-url-wrapper">
-	            <span><?php echo get_bloginfo('url'); ?>/</span><input id="adu-form-input" type="text" name="mya_url" value="<?php echo $pluginData->user_page_url; ?>">
+	            <span><?php echo get_bloginfo('url'); ?>/</span><input id="adu-form-input" type="text" name="mya_url" value="<?php echo $pluginData->user_page_url ?? 'my-account'; ?>">
             </div>
 		</div>
 
@@ -65,26 +65,11 @@
 			<label for="adu-description">description</label><br>
 		</div>
 
-		<input type="submit" value="Save">
+		<input type="submit" value="Save And Create Public Page">
 
 	</form>
 </div>
 
 <style>
-	.au-container {
-		padding: 25px 15px;
-	}
-    #admin-user-account-form input[type=submit] {
-	    margin-top: 15px;
-    }
-    .url-label-area label {
-        display: block;
-    }
-    .input-url-wrapper {
-        display: inline-block;
-        margin-top: 5px;
-    }
-    .input-url-wrapper span {
-        font-size: 14px;
-    }
+
 </style>

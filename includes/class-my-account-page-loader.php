@@ -10,6 +10,8 @@
  * @subpackage My_Account_Page/includes
  */
 
+use MyAccountAdmin\AdminSettingsClass;
+
 /**
  * Register all actions and filters for the plugin.
  *
@@ -60,7 +62,7 @@ class My_Account_Page_Loader {
         global $wp;
         $current_slug = $wp->request;
 
-        if ($current_slug === 'my-account') {
+        if ($current_slug === AdminSettingsClass::getSettingUrl()) {
 	        if (!is_user_logged_in()) {
 		        auth_redirect();
 	        }
