@@ -13,6 +13,7 @@
  * @subpackage My_Account_Page/includes
  */
 
+use AdminSettings\AdminSettingsClass;
 use MyAccountRoutes\Routes;
 
 /**
@@ -58,10 +59,6 @@ class My_Account_Page {
 	 * @var      string $version The current version of the plugin.
 	 */
 	protected $version;
-	/**
-	 * @var mixed
-	 */
-	private $current_user;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -128,9 +125,9 @@ class My_Account_Page {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-my-account-page-public.php';
 
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/InfoTabClass.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/AdminSettingsClass.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/Routes.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/AdminSettingsClass.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/InfoTabClass.php';
 
 		$this->loader = new My_Account_Page_Loader();
 	}
@@ -169,11 +166,15 @@ class My_Account_Page {
 	}
 
 	public function add_menu_page_my_account_page() {
-		add_menu_page('My Account Page', 'My Account Page', 'administrator', 'my-account-page-admin', [$this, 'my_account_settings_page'],'dashicons-admin-generic');
-	}
 
-	public function my_account_settings_page() {
-		include plugin_dir_path( dirname( __FILE__ ) ) . 'includes/AdminSettingsPage.php';
+		add_menu_page(
+			'My Account Page',
+			'My Account Page',
+			'administrator',
+			'my-account-page-admin',
+			[AdminSettingsClass::class, 'getMyAccountSettingsPage'],
+			'dashicons-admin-generic'
+		);
 	}
 
 	/**

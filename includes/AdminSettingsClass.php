@@ -41,4 +41,20 @@ class AdminSettingsClass {
 			throw new Exception('Please enter mya_url');
 		}
 	}
+
+	static public function getMyAccountSettingsPage() {
+
+		global $wpdb;
+		$tablename = $wpdb->prefix."my_account_page_plugin";
+		$sql = "SELECT * FROM ".$tablename . " WHERE id = '1'";
+		$results = $wpdb->get_results($sql);
+
+		$pluginData = $results[0] ?? [];
+
+		$fields_allowed_array = json_decode($pluginData->fields_allowed_json) !== ''
+			? json_decode($pluginData->fields_allowed_json)
+			: [];
+
+		include plugin_dir_path( dirname( __FILE__ ) ) . 'includes/AdminSettingsPage.php';
+	}
 }

@@ -49,9 +49,7 @@ class Routes {
 	 * @throws Exception
 	 */
 	public function savePublicUserInfo( $request ) {
-
 		$this->userLoggedValidate($request);
-
 		$postData = $request->get_params();
 		$infoTabClass = new InfoTabClass($this->current_user);
 		$infoTabClass->handleUserSaving($postData);
