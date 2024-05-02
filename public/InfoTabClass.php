@@ -2,6 +2,7 @@
 
 namespace MyAccountPublic;
 
+use MyAccountAdmin\AdminSettingsClass;
 use stdClass;
 
 class InfoTabClass {
@@ -59,22 +60,28 @@ class InfoTabClass {
 	public function getUserData() {
 
 		$user_meta = get_user_meta($this->loggedUserId);
+		$metaFields = [
+			"nickname",
+			"first_name",
+			"last_name",
+			"description"
+		];
+
 		$user_data = get_userdata($this->loggedUserId);
+		$allowedFields = AdminSettingsClass::getSettingFieldsAllowedJson();
 
 		$userData = new stdClass();
-		$userData->ID              = $user_data->ID;
-		$userData->user_nicename   = $user_data->user_nicename;
-		$userData->user_email      = $user_data->user_email;
-		$userData->user_registered = $user_data->user_registered;
-		$userData->display_name    = $user_data->display_name;
-		$userData->user_url        = $user_data->user_url;
-		$userData->nickname        = $user_meta["nickname"][0];
-		$userData->first_name      = $user_meta["first_name"][0];
-		$userData->last_name       = $user_meta["last_name"][0];
-		$userData->description     = $user_meta["description"][0];
+		$userData->ID = $user_data->ID;
 
-		return include plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/tab-info.php';
+		foreach ($allowedFields as $allowedField) {
+			if (in_array($allowedField, $metaFields)) {
+				$userData->$allowedField = $user_meta[$allowedField][0];
+			} else {
+				$userData->$allowedField = $user_data->$allowedField;
+			}
+		}
 
+		 return include plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/tab-info.php';
 	}
 
 	/**

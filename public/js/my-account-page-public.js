@@ -50,7 +50,7 @@ function getPage(clickData) {
 
     const formData =  new FormData;
     formData.append('tabName', TabsSwitcherHelper.getTabName(clickId));
-    formData.append('actionWanted', 'toGet');
+  //  formData.append('actionWanted', 'toGet');
   //  formData.append('action', 'switchTabAjax');
 
     const xhr = new XMLHttpRequest();
