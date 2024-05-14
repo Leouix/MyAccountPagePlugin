@@ -5,6 +5,7 @@ let userFormClassObject;
 
 window.addEventListener('load', function() {
     containerResults = document.getElementById('container-results')
+    checkTabGetParamsLoading()
 })
 
 function triggerUserForm() {
@@ -61,7 +62,11 @@ function getPage(clickData) {
             let json = JSON.parse(this.response)
             containerResults.innerHTML = json.html
 
-            triggerUserForm()
+            replaceUrlParam(TabsSwitcherHelper.getTabName(clickId))
+
+            if (TabsSwitcherHelper.getTabName(clickId) === 'info') {
+                triggerUserForm()
+            }
         }
         if (this.readyState === 4 && this.status === 404){
             console.log('An error occurred')
@@ -90,4 +95,55 @@ class TabsSwitcherHelper {
     static getTabName(buttonId) {
         return this.tabs[buttonId]
     }
+}
+function getNavUrl() {
+    // Get URL
+    return window.location.search.replace("?", "");
+}
+
+function getParameters(url) {
+    // Params obj
+    var params = {};
+    // To lowercase
+    url = url.toLowerCase();
+    // To array
+    url = url.split('&');
+
+    // Iterate over URL parameters array
+    var length = url.length;
+    for(var i=0; i<length; i++) {
+        // Create prop
+        var prop = url[i].slice(0, url[i].search('='));
+        // Create Val
+        var value = url[i].slice(url[i].search('=')).replace('=', '');
+        // Params New Attr
+        params[prop] = value;
+    }
+    return params;
+}
+
+function checkTabGetParamsLoading() {
+
+    const params = getParameters(getNavUrl())
+
+    if (params?.tab === 'my-comments') {
+        getPage({
+            clickId: "tab-button-1"
+        })
+    } else if (params?.tab === 'users') {
+        getPage({
+            clickId: "tab-button-2"
+        })
+    } else if (params?.tab === 'info') {
+        getPage({
+            clickId: "tab-button-3"
+        })
+    }
+}
+
+function replaceUrlParam(paramValue)
+{
+    const queryParams = new URLSearchParams(window.location.search);
+    queryParams.set("tab", paramValue);
+    history.replaceState(null, null, "?"+queryParams.toString());
 }
