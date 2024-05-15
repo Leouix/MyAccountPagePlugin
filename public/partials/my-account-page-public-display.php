@@ -15,9 +15,11 @@
 
 <?php wp_head(); ?>
 
+
+<div class="au-container">
     <div id="main-tabs">
         <div id="tab-button-1"
-             class="main-tabs-item active"
+             class="main-tabs-item"
              onclick="switchTab(this)">
             <div class="text">My Comments</div>
         </div>
@@ -34,5 +36,8 @@
     </div>
 
     <div id="container-results"></div>
+</div>
+
+
 
 <?php wp_footer();

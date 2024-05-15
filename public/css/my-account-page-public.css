@@ -17,6 +17,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-right: 5px;
+    margin-bottom: 25px;
+    cursor: pointer;
 }
 
 #main-tabs .main-tabs-item.active {
@@ -28,4 +31,41 @@
     rotate: -90deg;
     width: 100%;
     margin-bottom: -35px;
+    font-size: 16px;
+    line-height: 1.1;
+    color: #060606;
+}
+
+.au-container {
+    padding: 35px;
+    background: #383838;
+}
+
+.au-container form input {
+    padding: 8px 15px;
+    font-size: 16px;
+    margin: 8px 0 15px 0;
+    outline: none;
+}
+
+.au-container form label {
+    font-size: 16px;
+    color: #e9e9e9;
+}
+
+.au-container form input[type="submit"] {
+    cursor: pointer;
+    color: #e9e9e9;
+    background: #d97b42;
+    text-transform: uppercase;
+    border: none;
+    transition: 0.55s ease-in;
+}
+
+.au-container form input[type="submit"].success {
+    background: green;
+}
+
+.au-container form input[type="submit"].warning {
+    background: red;
 }

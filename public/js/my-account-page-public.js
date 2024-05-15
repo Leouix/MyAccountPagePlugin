@@ -2,9 +2,17 @@ console.log('js file')
 
 let containerResults;
 let userFormClassObject;
+let tabButton1;
+let tabButton2;
+let tabButton3;
+
 
 window.addEventListener('load', function() {
     containerResults = document.getElementById('container-results')
+    tabButton1 = document.getElementById('tab-button-1')
+    tabButton2 = document.getElementById('tab-button-2')
+    tabButton3 = document.getElementById('tab-button-3')
+
     checkTabGetParamsLoading()
 })
 
@@ -30,9 +38,12 @@ function userFormSubmit(elForm) {
             console.log(this.response)
             // let json = JSON.parse(this.response)
             // containerResults.innerHTML = json.html
+
+            successAjaxButtonEvent('success')
         }
         if (this.readyState === 4 && this.status === 404){
             console.log('An error occurred')
+            successAjaxButtonEvent('warning')
         }
     }
     xhr.send(formData);
@@ -43,6 +54,7 @@ function switchTab(el) {
     getPage({
         clickId: el.id
     })
+    TabsSwitcherHelper.switch(el.id)
 }
 
 function getPage(clickData) {
@@ -61,7 +73,6 @@ function getPage(clickData) {
            // console.log(this.response)
             let json = JSON.parse(this.response)
             containerResults.innerHTML = json.html
-
             replaceUrlParam(TabsSwitcherHelper.getTabName(clickId))
 
             if (TabsSwitcherHelper.getTabName(clickId) === 'info') {
@@ -75,6 +86,14 @@ function getPage(clickData) {
     xhr.send(formData);
 }
 
+function successAjaxButtonEvent(statusClass) {
+    let formUserButton = document.getElementById('form-user-button')
+    formUserButton.classList.add(statusClass)
+    if (statusClass === 'success') {
+        setTimeout(()=> toggleBtn(false), 1500)
+    }
+}
+
 function editingUserData(el) {
     userFormClassObject.editingUserData(el)
 }
@@ -83,6 +102,10 @@ function toggleBtn(isFormChanged) {
     let formUserButton = document.getElementById('form-user-button')
     if (formUserButton !== undefined && formUserButton !== null) {
         isFormChanged ? formUserButton.style.display = 'block' : formUserButton.style.display = 'none'
+        if (isFormChanged) {
+            formUserButton.classList.remove('success')
+            formUserButton.classList.remove('warning')
+        }
     }
 }
 
@@ -94,6 +117,25 @@ class TabsSwitcherHelper {
     }
     static getTabName(buttonId) {
         return this.tabs[buttonId]
+    }
+
+    static switch(activeTabId) {
+
+        tabButton1.classList.remove('active')
+        tabButton2.classList.remove('active')
+        tabButton3.classList.remove('active')
+
+        switch (activeTabId) {
+            case 'tab-button-1':
+                tabButton1.classList.add('active')
+                break;
+            case 'tab-button-2':
+                tabButton2.classList.add('active')
+                break;
+            case 'tab-button-3':
+                tabButton3.classList.add('active')
+                break;
+        }
     }
 }
 function getNavUrl() {
@@ -130,15 +172,19 @@ function checkTabGetParamsLoading() {
         getPage({
             clickId: "tab-button-1"
         })
+        TabsSwitcherHelper.switch("tab-button-1")
     } else if (params?.tab === 'users') {
         getPage({
             clickId: "tab-button-2"
         })
+        TabsSwitcherHelper.switch("tab-button-2")
     } else if (params?.tab === 'info') {
         getPage({
             clickId: "tab-button-3"
         })
+        TabsSwitcherHelper.switch("tab-button-3")
     }
+
 }
 
 function replaceUrlParam(paramValue)

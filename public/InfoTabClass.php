@@ -18,23 +18,28 @@ class InfoTabClass {
 	 */
 	public function saveUserInfo( $userId, $userFields ) {
 
-		$userMeta = [
-			"nickname" => $userFields["nickname"],
-			"first_name" => $userFields["first_name"],
-			"last_name" => $userFields["last_name"],
-			"description" => $userFields["description"],
-		];
+		$userMeta = array_filter([
+			"nickname" => $userFields["nickname"] ?? null,
+			"first_name" => $userFields["first_name"] ?? null,
+			"last_name" => $userFields["last_name"] ?? null,
+			"description" => $userFields["description"] ?? null,
+		], function($value) {
+			return !is_null($value);
+		});
 
 		$this->updateUserMeta($userId, $userMeta);
 
-		$userData = array(
-			'ID' => $this->loggedUserId,
-			'user_nicename' => $userFields["user_nicename"],
-			'user_email' => $userFields["user_email"],
-			'user_registered' => $userFields["user_registered"],
-			'display_name' => $userFields["display_name"],
-			'user_url' => $userFields["user_url"],
-		);
+		$userData = array_merge([
+			'ID' => $this->loggedUserId
+		], array_filter([
+			'user_nicename' => $userFields["user_nicename"] ?? null,
+			'user_email' => $userFields["user_email"] ?? null,
+			'user_registered' => $userFields["user_registered"] ?? null,
+			'display_name' => $userFields["display_name"] ?? null,
+			'user_url' => $userFields["user_url"] ?? null,
+		], function($value) {
+			return !is_null($value);
+		}));
 
 		try {
 			return wp_update_user( $userData );
@@ -90,15 +95,15 @@ class InfoTabClass {
 	public function handleUserSaving($postData) {
 
 		$userData = array();
-		$userData["user_nicename"]   = $postData["user_nicename"];
-		$userData["user_email"]      = $postData["user_email"];
-		$userData["user_registered"] = $postData["user_registered"];
-		$userData["display_name"]    = $postData["display_name"];
-		$userData["user_url"]        = $postData["user_url"];
-		$userData["nickname"]        = $postData["nickname"];
-		$userData["first_name"]      = $postData["first_name"];
-		$userData["last_name"]       = $postData["last_name"];
-		$userData["description"]     = $postData["description"];
+		$userData["user_nicename"]   = $postData["user_nicename"] ?? null;
+		$userData["user_email"]      = $postData["user_email"] ?? null;
+		$userData["user_registered"] = $postData["user_registered"] ?? null;
+		$userData["display_name"]    = $postData["display_name"] ?? null;
+		$userData["user_url"]        = $postData["user_url"] ?? null;
+		$userData["nickname"]        = $postData["nickname"] ?? null;
+		$userData["first_name"]      = $postData["first_name"] ?? null;
+		$userData["last_name"]       = $postData["last_name"] ?? null;
+		$userData["description"]     = $postData["description"] ?? null;
 
 		return $this->saveUserInfo( $this->loggedUserId, $userData );
 	}
