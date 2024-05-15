@@ -37,8 +37,14 @@
 }
 
 .au-container {
-    padding: 35px;
+    padding: 25px;
     background: #383838;
+}
+
+@media screen and (min-width: 430px) {
+    .au-container {
+        padding: 35px;
+    }
 }
 
 .au-container form input {
@@ -88,8 +94,18 @@ html[data-darkreader-scheme="dark"] #main-tabs .main-tabs-item.active {
 }
 
 .au-comment-area p {
-    margin: 10px 15px;
+    margin: 10px 0;
     font-size: 16px;
+}
+
+/*@media screen and (min-width: 430px) {*/
+/*    */
+/*}*/
+
+@media screen and (min-width: 430px) {
+    .au-comment-area p {
+        margin: 10px 15px;
+    }
 }
 
 .au-comment-area .post-link,
