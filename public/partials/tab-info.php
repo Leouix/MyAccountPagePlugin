@@ -4,6 +4,8 @@
  */
 ?>
 
+<h2>Информация профиля</h2>
+
 <form id="user-data-form" enctype="multipart/form-data">
 
     <?php if (isset($userData->user_nicename)) { ?>

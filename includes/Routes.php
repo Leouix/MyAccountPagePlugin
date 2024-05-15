@@ -94,11 +94,19 @@ class Routes {
 	}
 
 	private function myCommentsTab() {
+
+		$args = array(
+			'user_id' => $this->current_user, // ID пользователя
+			'status' => 'approve'  // Получить только одобренные комментарии
+		);
+		$user_comments = get_comments($args);
+
 		return include plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/tab-my-comments.php';
 	}
 
 	private function infoTab() {
 		$infoTabClass = new InfoTabClass($this->current_user);
+
 		return $infoTabClass->getUserData();
 	}
 

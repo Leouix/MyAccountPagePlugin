@@ -35,7 +35,6 @@
         </div>
     </div>
 
-    <h2>Информация профиля</h2>
     <div id="container-results"></div>
 </div>
 
