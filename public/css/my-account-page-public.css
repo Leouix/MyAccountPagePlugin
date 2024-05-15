@@ -69,3 +69,8 @@
 .au-container form input[type="submit"].warning {
     background: red;
 }
+
+.au-container h2 {
+    font-size: 32px;
+    color: #e3e3e3;
+}
