@@ -178,7 +178,7 @@ function checkTabGetParamsLoading() {
             clickId: "tab-button-2"
         })
         TabsSwitcherHelper.switch("tab-button-2")
-    } else if (params?.tab === 'info') {
+    } else { // if (params?.tab === 'info')
         getPage({
             clickId: "tab-button-3"
         })
