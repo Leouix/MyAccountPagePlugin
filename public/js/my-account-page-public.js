@@ -10,7 +10,7 @@ let tabButton3;
 window.addEventListener('load', function() {
     containerResults = document.getElementById('container-results')
     tabButton1 = document.getElementById('tab-button-1')
-    tabButton2 = document.getElementById('tab-button-2')
+    // tabButton2 = document.getElementById('tab-button-2')
     tabButton3 = document.getElementById('tab-button-3')
 
     checkTabGetParamsLoading()
@@ -122,7 +122,7 @@ class TabsSwitcherHelper {
     static switch(activeTabId) {
 
         tabButton1.classList.remove('active')
-        tabButton2.classList.remove('active')
+      //  tabButton2.classList.remove('active')
         tabButton3.classList.remove('active')
 
         switch (activeTabId) {
@@ -130,7 +130,7 @@ class TabsSwitcherHelper {
                 tabButton1.classList.add('active')
                 break;
             case 'tab-button-2':
-                tabButton2.classList.add('active')
+              //  tabButton2.classList.add('active')
                 break;
             case 'tab-button-3':
                 tabButton3.classList.add('active')
