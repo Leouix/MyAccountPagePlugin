@@ -1,16 +1,18 @@
 === Plugin Name ===
-Contributors: (this should be a list of wordpress.org userid's)
+Contributors: Leouix
 Donate link: https://weal.cloud/
-Tags: comments, spam
+Tags: plugin, плагин, профили пользователя, личный кабинет
 Requires at least: 3.0.1
 Tested up to: 3.4
 Stable tag: 4.3
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+Plugin creates a page /my-account for manage user info.
 
 == Description ==
+
+
 
 This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
 

@@ -10,14 +10,16 @@
 <div class="au-container">
 	<form id="admin-user-account-form">
 
+        <h1>Настройки плагина My Account Page</h1>
+
 		<div class="url-label-area">
-			<label for="adu-form-input">URL страницы пользователя:</label>
+			<label for="adu-form-input" class="sub-title">URL страницы пользователя:</label>
             <div class="input-url-wrapper">
-	            <span><?php echo get_bloginfo('url'); ?>/</span><input id="adu-form-input" type="text" name="mya_url" value="<?php echo $pluginData->user_page_url ?? 'my-account'; ?>">
+	            <span><?php echo get_bloginfo('url'); ?>/</span><input id="adu-form-input" type="text" name="mya_url" value="<?php echo $pluginData->user_page_url ?? 'my-account'; ?>" disabled><div id="lock-url"><div id="dashicons-unlock" class="dashicons dashicons-unlock hidden"></div><div id="dashicons-lock" class="dashicons dashicons-lock visible"></div></div>
             </div>
 		</div>
 
-		<h4>Какие поля показывать в кабинете пользователя?</h4>
+		<div  class="sub-title">Какие поля показывать в кабинете пользователя?</div>
 
 		<div class="label-area">
 			<input type="checkbox" id="adu-user-nicename" name="show_user_fields_checkbox[]" value="user_nicename"  <?php echo in_array("user_nicename", $fields_allowed_array) ? "checked" : ''?>>
@@ -65,7 +67,10 @@
 			<label for="adu-description">description</label><br>
 		</div>
 
-		<input type="submit" value="Save And Create Public Page">
+        <div class="button-area">
+            <input id="save-create-button" type="submit" value="Save And Create Public Page">
+            <div id="success-notice">Success!</div>
+        </div>
 
 	</form>
 </div>
