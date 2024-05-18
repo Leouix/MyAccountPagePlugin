@@ -163,6 +163,13 @@ class My_Account_Page {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action( 'admin_menu', $this, 'add_menu_page_my_account_page' );
+
+		 $this->loader->add_filter( 'plugin_action_links_' . plugin_dir_path( 'my-account-page/my-account-page.php' ) . 'my-account-page.php', $this, 'my_plugin_settings');
+	}
+
+	public function my_plugin_settings( $settings ) {
+		$settings[] = '<a href="'. get_admin_url(null, 'admin.php?page=my-account-page-admin') .'">Settings</a>';
+		return $settings;
 	}
 
 	public function add_menu_page_my_account_page() {
@@ -197,6 +204,9 @@ class My_Account_Page {
 
 		$routesClass = new Routes();
 		$this->loader->add_action( 'rest_api_init', $routesClass, 'routeReg' );
+
+
+
 	}
 
 	/**

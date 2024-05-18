@@ -18,7 +18,7 @@
  * Description:       Public page personal account of the user
  * Version:           1.0.0
  * Author:            leouix
- * Author URI:        https://weal.cloud/
+ * Author URI:        https://github.com/Leouix/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       my-account-page

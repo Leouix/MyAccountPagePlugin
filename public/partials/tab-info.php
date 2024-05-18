@@ -4,7 +4,7 @@
  */
 ?>
 
-<h2>Информация профиля</h2>
+<h2>User Info</h2>
 
 <form id="user-data-form" enctype="multipart/form-data">
 
@@ -15,8 +15,8 @@
                     id="user-nicename"
                     name="user_nicename"
                     oninput="editingUserData(this)"
-                    data-orig="<?php echo $userData->user_nicename; ?>"
-                    value="<?php echo $userData->user_nicename; ?>"
+                    data-orig="<?php echo esc_html($userData->user_nicename); ?>"
+                    value="<?php echo esc_html($userData->user_nicename); ?>"
             >
         </div>
     <?php } ?>
@@ -28,8 +28,8 @@
                     id="user-email"
                     name="user_email"
                     oninput="editingUserData(this)"
-                    data-orig="<?php echo $userData->user_email; ?>"
-                    value="<?php echo $userData->user_email; ?>"
+                    data-orig="<?php echo esc_html($userData->user_email); ?>"
+                    value="<?php echo esc_html($userData->user_email); ?>"
             >
         </div>
 	<?php } ?>
@@ -42,8 +42,8 @@
                     id="user-registered"
                     name="user_registered"
                     oninput="editingUserData(this)"
-                    data-orig="<?php echo $userData->user_registered; ?>"
-                    value="<?php echo $userData->user_registered; ?>"
+                    data-orig="<?php echo esc_html($userData->user_registered); ?>"
+                    value="<?php echo esc_html($userData->user_registered); ?>"
             >
         </div>
 	<?php } ?>
@@ -55,8 +55,8 @@
                     id="display-name"
                     name="display_name"
                     oninput="editingUserData(this)"
-                    data-orig="<?php echo $userData->display_name; ?>"
-                    value="<?php echo $userData->display_name; ?>"
+                    data-orig="<?php echo esc_html($userData->display_name); ?>"
+                    value="<?php echo esc_html($userData->display_name); ?>"
             >
         </div>
 	<?php } ?>
@@ -68,8 +68,8 @@
                     id="user-url"
                     name="user_url"
                     oninput="editingUserData(this)"
-                    data-orig="<?php echo $userData->user_url; ?>"
-                    value="<?php echo $userData->user_url; ?>"
+                    data-orig="<?php echo esc_html($userData->user_url); ?>"
+                    value="<?php echo esc_html($userData->user_url); ?>"
             >
         </div>
 	<?php } ?>
@@ -81,8 +81,8 @@
                     id="nickname"
                     name="nickname"
                     oninput="editingUserData(this)"
-                    data-orig="<?php echo $userData->nickname; ?>"
-                    value="<?php echo $userData->nickname; ?>"
+                    data-orig="<?php echo esc_html($userData->nickname); ?>"
+                    value="<?php echo esc_html($userData->nickname); ?>"
             >
         </div>
 	<?php } ?>
@@ -94,8 +94,8 @@
                     id="first-name"
                     name="first_name"
                     oninput="editingUserData(this)"
-                    data-orig="<?php echo $userData->first_name; ?>"
-                    value="<?php echo $userData->first_name; ?>"
+                    data-orig="<?php echo esc_html($userData->first_name); ?>"
+                    value="<?php echo esc_html($userData->first_name); ?>"
             >
         </div>
 	<?php } ?>
@@ -107,8 +107,8 @@
                     id="last-name"
                     name="last_name"
                     oninput="editingUserData(this)"
-                    data-orig="<?php echo $userData->last_name; ?>"
-                    value="<?php echo $userData->last_name; ?>"
+                    data-orig="<?php echo esc_html($userData->last_name); ?>"
+                    value="<?php echo esc_html($userData->last_name); ?>"
             >
         </div>
 	<?php } ?>
@@ -120,12 +120,12 @@
                     id="description"
                     name="description"
                     oninput="editingUserData(this)"
-                    data-orig="<?php echo $userData->description; ?>"
-                    value="<?php echo $userData->description; ?>"
+                    data-orig="<?php echo esc_html($userData->description); ?>"
+                    value="<?php echo esc_html($userData->description); ?>"
         </div>
 	<?php } ?>
 
-    <input type="hidden" name="ID" value="<?php echo $userData->ID; ?>">
+    <input type="hidden" name="ID" value="<?php echo esc_html($userData->ID); ?>">
 
     <input id="form-user-button" type="submit" value="Save">
 

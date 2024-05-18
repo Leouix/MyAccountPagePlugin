@@ -10,60 +10,66 @@
 <div class="au-container">
 	<form id="admin-user-account-form">
 
-        <h1>Настройки плагина My Account Page</h1>
+        <h1>Plugin settings page</h1>
 
 		<div class="url-label-area">
-			<label for="adu-form-input" class="sub-title">URL страницы пользователя:</label>
+			<label for="adu-form-input" class="sub-title">URL user page:</label>
             <div class="input-url-wrapper">
-	            <span><?php echo get_bloginfo('url'); ?>/</span><input id="adu-form-input" type="text" name="mya_url" value="<?php echo $pluginData->user_page_url ?? 'my-account'; ?>" disabled><div id="lock-url"><div id="dashicons-unlock" class="dashicons dashicons-unlock hidden"></div><div id="dashicons-lock" class="dashicons dashicons-lock visible"></div></div>
+	            <span><?php echo sprintf('%s', esc_url(get_bloginfo('url'))); ?>/</span><input id="adu-form-input" type="text" name="mya_url" value="<?php echo sprintf('%s', esc_url($pluginData->user_page_url ?? 'my-account')); ?>" disabled><div id="lock-url"><div id="dashicons-unlock" class="dashicons dashicons-unlock hidden"></div><div id="dashicons-lock" class="dashicons dashicons-lock visible"></div></div>
             </div>
 		</div>
 
-		<div  class="sub-title">Какие поля показывать в кабинете пользователя?</div>
+		<div  class="sub-title">Which fields should be shown in the user account?</div>
 
 		<div class="label-area">
-			<input type="checkbox" id="adu-user-nicename" name="show_user_fields_checkbox[]" value="user_nicename"  <?php echo in_array("user_nicename", $fields_allowed_array) ? "checked" : ''?>>
+			<input type="checkbox" id="adu-user-nicename" name="show_user_fields_checkbox[]" value="user_nicename"  <?php echo sprintf('%s', in_array("user_nicename", $fields_allowed_array) ? "checked" : '');
+			?>>
 			<label for="adu-user-nicename"> user_nicename</label><br>
 		</div>
 
 		<div class="label-area">
-			<input type="checkbox" id="adu-user-email" name="show_user_fields_checkbox[]" value="user_email"  <?php echo in_array("user_email", $fields_allowed_array) ? "checked" : ''?>>
+			<input type="checkbox" id="adu-user-email" name="show_user_fields_checkbox[]" value="user_email"  <?php echo sprintf('%s', in_array("user_email", $fields_allowed_array) ? "checked" : '');
+			?>>
 			<label for="adu-user-email"> user_email</label><br>
 		</div>
 
 
 		<div class="label-area">
-			<input type="checkbox" id="adu-user-registered" name="show_user_fields_checkbox[]" value="user_registered"  <?php echo in_array("user_registered", $fields_allowed_array) ? "checked" : ''?>>
+			<input type="checkbox" id="adu-user-registered" name="show_user_fields_checkbox[]" value="user_registered"  <?php echo sprintf('%s', in_array("user_registered", $fields_allowed_array) ? "checked" : ''); ?>>
 			<label for="adu-user-registered">user_registered</label><br>
 		</div>
 
 		<div class="label-area">
-			<input type="checkbox" id="adu-display_name" name="show_user_fields_checkbox[]" value="display_name" <?php echo in_array("display_name", $fields_allowed_array) ? "checked" : ''?>>
+			<input type="checkbox" id="adu-display_name" name="show_user_fields_checkbox[]" value="display_name" <?php echo sprintf('%s', in_array("display_name", $fields_allowed_array) ? "checked" : '');
+			?>>
 			<label for="adu-display_name">display_name</label><br>
 		</div>
 
 		<div class="label-area">
-			<input type="checkbox" id="adu-user_url" name="show_user_fields_checkbox[]" value="user_url" <?php echo in_array("user_url", $fields_allowed_array) ? "checked" : ''?>>
+			<input type="checkbox" id="adu-user_url" name="show_user_fields_checkbox[]" value="user_url" <?php echo sprintf('%s', in_array("user_url", $fields_allowed_array) ? "checked" : '');
+			?>>
 			<label for="adu-user_url">user_url</label><br>
 		</div>
 
 		<div class="label-area">
-			<input type="checkbox" id="adu-nickname" name="show_user_fields_checkbox[]" value="nickname" <?php echo in_array("nickname", $fields_allowed_array) ? "checked" : ''?>>
+			<input type="checkbox" id="adu-nickname" name="show_user_fields_checkbox[]" value="nickname" <?php echo sprintf('%s', in_array("nickname", $fields_allowed_array) ? "checked" : '');?>>
 			<label for="adu-nickname">nickname</label><br>
 		</div>
 
 		<div class="label-area">
-			<input type="checkbox" id="adu-first_name" name="show_user_fields_checkbox[]" value="first_name" <?php echo in_array("first_name", $fields_allowed_array) ? "checked" : ''?>>
+			<input type="checkbox" id="adu-first_name" name="show_user_fields_checkbox[]" value="first_name" <?php echo sprintf('%s', in_array("first_name", $fields_allowed_array) ? "checked" : ''); ?>>
 			<label for="adu-first_name">first_name</label><br>
 		</div>
 
 		<div class="label-area">
-			<input type="checkbox" id="adu-last_name" name="show_user_fields_checkbox[]" value="last_name" <?php echo in_array("last_name", $fields_allowed_array) ? "checked" : ''?>>
+			<input type="checkbox" id="adu-last_name" name="show_user_fields_checkbox[]" value="last_name" <?php echo sprintf('%s', in_array("last_name", $fields_allowed_array) ? "checked" : '');
+			?>>
 			<label for="adu-last_name">last_name</label><br>
 		</div>
 
 		<div class="label-area">
-			<input type="checkbox" id="adu-description" name="show_user_fields_checkbox[]" value="description" <?php echo in_array("description", $fields_allowed_array) ? "checked" : ''?>>
+			<input type="checkbox" id="adu-description" name="show_user_fields_checkbox[]" value="description" <?php echo sprintf('%s', in_array("description", $fields_allowed_array) ? "checked" : '');
+			?>>
 			<label for="adu-description">description</label><br>
 		</div>
 

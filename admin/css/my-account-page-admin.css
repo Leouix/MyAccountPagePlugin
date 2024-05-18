@@ -79,3 +79,7 @@ h1 {
 .button-area {
     display: flex;
 }
+
+.dashicons {
+    cursor: pointer;
+}
