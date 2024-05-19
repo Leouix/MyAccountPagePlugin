@@ -8,37 +8,46 @@ use WP_Post;
 class AdminSettingsClass {
 
 	/**
-	 * @throws Exception
+	 * @var mixed
 	 */
-	public static function handleSaving($postData) {
-		self::validateInputData($postData);
+	private $loggedUserId;
 
-		if (!self::isPluginTableExists()) {
-			self::createDBTable();
-		}
-
-		self::checkPublicPage($postData);
+	public function __construct( $loggedUserId ) {
+		$this->loggedUserId = $loggedUserId;
 	}
 
-	public static function checkPublicPage($postData) {
-		
-		if ( self::getSettingUrl() !== null && self::getSettingUrl() !== $postData['mya_url']) {
-			$oldPluginPublicPage = self::getPluginPublicPage(self::getSettingUrl());
-			wp_delete_post($oldPluginPublicPage->ID, true);
+	/**
+	 * @throws Exception
+	 */
+	public function handleSaving( $postData ) {
+		// $this->validateInputData($postData);
+
+		if ( ! $this->isPluginTableExists() ) {
+			$this->createDBTable();
 		}
 
-		self::save($postData);
-		self::createMyAccountPagePublic();
+		$this->checkPublicPage( $postData );
+	}
+
+	public function checkPublicPage( $postData ) {
+
+		if ( $this->getSettingUrl() !== null && ! empty( $postData['mya_url'] ) && $this->getSettingUrl() !== $postData['mya_url'] ) {
+			$oldPluginPublicPage = $this->getPluginPublicPage( $this->getSettingUrl() );
+			wp_delete_post( $oldPluginPublicPage->ID, true );
+		}
+
+		$this->save( $postData );
+		$this->createMyAccountPagePublic();
 	}
 
 	/**
 	 * @return bool
 	 */
-	public static function isPluginTableExists() {
+	public function isPluginTableExists() {
 
 		global $wpdb;
-		$table_name = $wpdb->base_prefix.'my_account_page_plugin';
-		$query = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table_name ) );
+		$table_name = $wpdb->base_prefix . 'my_account_page_plugin';
+		$query      = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table_name ) );
 
 		if ( ! $wpdb->get_var( $query ) == $table_name ) {
 			return false;
@@ -47,54 +56,57 @@ class AdminSettingsClass {
 		}
 	}
 
-	static private function save($postData) {
+	private function save( $postData ) {
 
 		$fields_allowed = $postData['show_user_fields_checkbox'] ?? '';
-		$data = array(
-			'user_page_url' => $postData['mya_url'],
-			'fields_allowed_json' => json_encode($fields_allowed)
+		$data           = array(
+			'fields_allowed_json' => json_encode( $fields_allowed )
 		);
 
+		if ( ! empty( $postData['mya_url'] ) ) {
+			$data['user_page_url'] = $postData['mya_url'];
+		}
+
 		global $wpdb;
-		$tablename = $wpdb->prefix."my_account_page_plugin";
+		$tablename = $wpdb->prefix . "my_account_page_plugin";
 		$wpdb->update(
 			$tablename,
 			$data,
-			array('ID' => 1),
-			array('%s','%s'),
-			array('%d')
+			array( 'ID' => $this->loggedUserId ),
+			array( '%s', '%s' ),
+			array( '%d' )
 		);
 	}
 
 	/**
 	 * @throws Exception
 	 */
-	static private function validateInputData($postData) {
-		if (empty($postData['mya_url'])) {
-			throw new Exception('Please enter mya_url');
+	private function validateInputData( $postData ) {
+		if ( empty( $postData['mya_url'] ) ) {
+			throw new Exception( 'Please enter mya_url' );
 		}
 	}
 
 	/**
 	 * @return void
 	 */
-	public static function getMyAccountSettingsPage() {
+	public function getMyAccountSettingsPage() {
 
-		$pluginData = [];
+		$pluginData           = [];
 		$fields_allowed_array = [];
 
-		if (self::isPluginTableExists()) {
+		if ( $this->isPluginTableExists() ) {
 			global $wpdb;
-			$tablename = $wpdb->prefix."my_account_page_plugin";
-			$sql = /** @lang text */
-				"SELECT * FROM " . $tablename . " WHERE id = '1'";
-			$results = $wpdb->get_results($sql);
+			$tablename = $wpdb->prefix . "my_account_page_plugin";
+			$sql       = /** @lang text */
+				"SELECT * FROM " . $tablename;
+			$results   = $wpdb->get_results( $sql );
 
 			$pluginData = $results[0] ?? [];
 
-			if (!empty($pluginData)) {
-				$fields_allowed_array = json_decode($pluginData->fields_allowed_json) !== ''
-					? json_decode($pluginData->fields_allowed_json)
+			if ( ! empty( $pluginData ) ) {
+				$fields_allowed_array = json_decode( $pluginData->fields_allowed_json ) !== ''
+					? json_decode( $pluginData->fields_allowed_json )
 					: [];
 			}
 		}
@@ -102,38 +114,38 @@ class AdminSettingsClass {
 		include plugin_dir_path( dirname( __FILE__ ) ) . 'admin/AdminSettingsPage.php';
 	}
 
-	public static function getSettingFieldsAllowedJson() {
+	public function getSettingFieldsAllowedJson() {
 
 		global $wpdb;
-		$tablename = $wpdb->prefix."my_account_page_plugin";
-		$sql = /** @lang text */
-			"SELECT `fields_allowed_json` FROM `" . $tablename . "` WHERE id = '1'";
-		$results = $wpdb->get_results($sql);
+		$tablename = $wpdb->prefix . "my_account_page_plugin";
+		$sql       = /** @lang text */
+			"SELECT `fields_allowed_json` FROM `" . $tablename . "`";
+		$results   = $wpdb->get_results( $sql );
 
 		$pluginData = $results[0] ?? [];
 
-		return json_decode($pluginData->fields_allowed_json) !== ''
-			? json_decode($pluginData->fields_allowed_json)
+		return json_decode( $pluginData->fields_allowed_json ) !== ''
+			? json_decode( $pluginData->fields_allowed_json )
 			: [];
 	}
 
 	/**
 	 * @return string|null
 	 */
-	public static function getSettingUrl() {
+	public function getSettingUrl() {
 
-		$url = 'my-account';
+		$url = null;
 
-		if (self::isPluginTableExists()) {
+		if ( $this->isPluginTableExists() ) {
 			global $wpdb;
-			$tablename = $wpdb->prefix."my_account_page_plugin";
-			$sql = /** @lang text */
-				"SELECT `user_page_url` FROM `" . $tablename . "` WHERE id = '1'";
-			$results = $wpdb->get_results($sql);
+			$tablename = $wpdb->prefix . "my_account_page_plugin";
+			$sql       = /** @lang text */
+				"SELECT `user_page_url` FROM `" . $tablename ."`";
+			$results   = $wpdb->get_results( $sql );
 
 			$pluginData = $results[0] ?? null;
 
-			if (!empty($pluginData) && !empty($pluginData->user_page_url)) {
+			if ( ! empty( $pluginData ) && ! empty( $pluginData->user_page_url ) ) {
 				$url = $pluginData->user_page_url;
 			}
 
@@ -142,13 +154,12 @@ class AdminSettingsClass {
 		return $url;
 	}
 
-	public static function createDBTable()
-	{
+	public function createDBTable() {
 		global $wpdb;
 
 		$charset_collate = $wpdb->get_charset_collate();
 
-		$table_name = $wpdb->prefix."my_account_page_plugin";
+		$table_name = $wpdb->prefix . "my_account_page_plugin";
 
 		$sql = /** @lang text */
 			"CREATE TABLE IF NOT EXISTS $table_name (
@@ -163,35 +174,34 @@ class AdminSettingsClass {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
-		self::insertEmptyData();
+		$this->insertEmptyData();
 	}
 
-	private static  function insertEmptyData() {
+	private function insertEmptyData() {
 		global $wpdb;
-		$tablename = $wpdb->prefix."my_account_page_plugin";
+		$tablename = $wpdb->prefix . "my_account_page_plugin";
 		$wpdb->insert(
 			$tablename,
 			array(
-				'user_page_url' => 'my-account',
-				'fields_allowed_json' => json_encode('')
+				'user_page_url'       => 'my-account',
+				'fields_allowed_json' => json_encode( '' )
 			),
-			array('%s','%s'),
+			array( '%s', '%s' ),
 		);
 	}
 
-	public static function createMyAccountPagePublic()
-	{
-		$postDataUrl = self::getSettingUrl();
+	public function createMyAccountPagePublic() {
+		$postDataUrl = $this->getSettingUrl();
 
-		$check_page_exist = self::getPluginPublicPage($postDataUrl);
-		if($check_page_exist === null) {
+		$check_page_exist = $this->getPluginPublicPage( $postDataUrl );
+		if ( $check_page_exist === null ) {
 			wp_insert_post(
 				array(
 					'comment_status' => 'close',
 					'ping_status'    => 'close',
 					'post_author'    => 1,
-					'post_title'     => ucwords('my-account'),
-					'post_name'      => strtolower(str_replace(' ', '-', trim($postDataUrl))),
+					'post_title'     => ucwords( 'my-account' ),
+					'post_name'      => strtolower( str_replace( ' ', '-', trim( $postDataUrl ) ) ),
 					'post_status'    => 'publish',
 					'post_content'   => '',
 					'post_type'      => 'page'
@@ -202,9 +212,10 @@ class AdminSettingsClass {
 
 	/**
 	 * @param $postDataUrl
+	 *
 	 * @return WP_Post|null
 	 */
-	public static function getPluginPublicPage($postDataUrl) {
-		return get_page_by_path($postDataUrl);
+	public function getPluginPublicPage( $postDataUrl ) {
+		return get_page_by_path( $postDataUrl );
 	}
 }

@@ -15,7 +15,12 @@
 		<div class="url-label-area">
 			<label for="adu-form-input" class="sub-title">URL user page:</label>
             <div class="input-url-wrapper">
-	            <span><?php echo sprintf('%s', esc_url(get_bloginfo('url'))); ?>/</span><input id="adu-form-input" type="text" name="mya_url" value="<?php echo sprintf('%s', esc_url($pluginData->user_page_url ?? 'my-account')); ?>" disabled><div id="lock-url"><div id="dashicons-unlock" class="dashicons dashicons-unlock hidden"></div><div id="dashicons-lock" class="dashicons dashicons-lock visible"></div></div>
+	            <span><?php echo sprintf('%s', esc_url(get_bloginfo('url'))); ?>/</span><input id="adu-form-input"
+                       type="text"
+                       name="mya_url"
+                       value="<?php echo sprintf('%s', esc_html($pluginData->user_page_url)); ?>"
+                       disabled
+                ><div id="lock-url"><div id="dashicons-unlock" class="dashicons dashicons-unlock hidden"></div><div id="dashicons-lock" class="dashicons dashicons-lock visible"></div></div>
             </div>
 		</div>
 

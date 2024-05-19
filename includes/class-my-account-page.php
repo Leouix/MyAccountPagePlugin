@@ -160,10 +160,12 @@ class My_Account_Page {
 
 		$plugin_admin = new My_Account_Page_Admin( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-		$this->loader->add_action( 'admin_menu', $this, 'add_menu_page_my_account_page' );
+		if ($this->isCurrentAdminPageUrl()) {
+			$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
+			$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		}
 
+		$this->loader->add_action( 'admin_menu', $this, 'add_menu_page_my_account_page' );
 		 $this->loader->add_filter( 'plugin_action_links_' . plugin_dir_path( 'my-account-page/my-account-page.php' ) . 'my-account-page.php', $this, 'my_plugin_settings');
 	}
 
@@ -174,12 +176,13 @@ class My_Account_Page {
 
 	public function add_menu_page_my_account_page() {
 
+		$adminSettings = new AdminSettingsClass(get_current_user_id());
 		add_menu_page(
 			'My Account Page',
 			'My Account Page',
 			'administrator',
 			'my-account-page-admin',
-			[AdminSettingsClass::class, 'getMyAccountSettingsPage'],
+			[$adminSettings, 'getMyAccountSettingsPage'],
 			'dashicons-admin-generic'
 		);
 	}
@@ -195,18 +198,64 @@ class My_Account_Page {
 
 		$plugin_public = new My_Account_Page_Public( $this->get_plugin_name(), $this->get_version() );
 
-		if ( AdminSettingsClass::getSettingUrl() !== null && strpos($_SERVER["REQUEST_URI"], AdminSettingsClass::getSettingUrl()) !== false ) {
-			$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-		}
-
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_class_user_data' );
+		 if ($this->isPublicPluginPage()) {
+			 $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
+			 $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_class_user_data' );
+			 $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+			 $this->loader->add_action('init', $this, 'my_custom_add_user_id_to_query_vars');
+		 }
 
 		$routesClass = new Routes();
 		$this->loader->add_action( 'rest_api_init', $routesClass, 'routeReg' );
 
+		$this->loader->add_action('template_include', $this, 'showPluginContent');
 
+	}
 
+	public function isPublicPluginPage() {
+		return $this->getPublicPageUrl() === trim(strtok($_SERVER["REQUEST_URI"], '?'), '/');
+	}
+
+	public function getPublicPageUrl() {
+
+		$url = null;
+
+		global $wpdb;
+		$tablename = $wpdb->prefix . "my_account_page_plugin";
+		$sql       = /** @lang text */
+			"SELECT `user_page_url` FROM `" . $tablename . "`";
+		$results   = $wpdb->get_results( $sql );
+
+		$pluginData = $results[0] ?? null;
+
+		if ( ! empty( $pluginData ) && ! empty( $pluginData->user_page_url ) ) {
+			$url = $pluginData->user_page_url;
+		}
+
+		return trim($url, '/');
+	}
+
+	public function isCurrentAdminPageUrl() {
+		// http://localhost/wp-admin/admin.php?page=my-account-page-admin
+
+		$current_url = $_SERVER['REQUEST_URI'];
+		return strpos($current_url, '/admin.php?page=my-account-page-admin') !== false;
+
+	}
+
+	public function showPluginContent($template)
+	{
+		if ($this->isPublicPluginPage())  {
+			if (!is_user_logged_in()) {
+				auth_redirect();
+			}
+			return WP_PLUGIN_DIR . '/my-account-page/public/partials/my-account-page-public-display.php';
+		}
+		return $template;
+	}
+	public function my_custom_add_user_id_to_query_vars() {
+		global $wp_query;
+		$wp_query->set('current_user_id', get_current_user_id());
 	}
 
 	/**

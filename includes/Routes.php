@@ -34,15 +34,32 @@ class Routes {
 			'methods'             => 'POST',
 			'callback'            => [ $this, 'adminSavePageSettings' ],
 			'permission_callback' => '__return_true',
+			'login_user_id'       => get_current_user_id(),
 		) );
 	}
+
+
+
 
 	/**
 	 * @throws Exception
 	 */
 	public function adminSavePageSettings($request) {
+
+
+		$attrs =  $request->get_attributes();
+
+		if ( empty($attrs['login_user_id']) ) {
+			throw new Exception('Login User ID is required.');
+		}
+
+		$this->current_user = $attrs['login_user_id'];
+
 		$postData = $request->get_params();
-		AdminSettingsClass::handleSaving($postData);
+
+		$adminManager = new AdminSettingsClass($this->current_user);
+
+		$adminManager->handleSaving($postData);
 	}
 
 	/**

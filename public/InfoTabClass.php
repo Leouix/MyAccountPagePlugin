@@ -73,7 +73,8 @@ class InfoTabClass {
 		];
 
 		$user_data = get_userdata($this->loggedUserId);
-		$allowedFields = AdminSettingsClass::getSettingFieldsAllowedJson();
+		$adminSettings = new AdminSettingsClass($this->loggedUserId);
+		$allowedFields = $adminSettings->getSettingFieldsAllowedJson();
 
 		$userData = new stdClass();
 		$userData->ID = $user_data->ID;

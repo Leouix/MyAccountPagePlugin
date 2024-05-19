@@ -52,25 +52,7 @@ class My_Account_Page_Loader {
 
 		$this->actions = array();
 		$this->filters = array();
-
-        add_action('template_include', [$this, 'showPluginContent']);
-      //  add_action('init', [$this, 'showPluginContent']);
 	}
-
-    public function showPluginContent($template)
-    {
-        global $wp;
-        $current_slug = $wp->request;
-
-        if ($current_slug === AdminSettingsClass::getSettingUrl()) {
-	        if (!is_user_logged_in()) {
-		        auth_redirect();
-	        }
-	    return WP_PLUGIN_DIR . '/my-account-page/public/partials/my-account-page-public-display.php';
-        }
-
-	    return $template;
-    }
 
 	/**
 	 * Add a new action to the collection to be registered with WordPress.

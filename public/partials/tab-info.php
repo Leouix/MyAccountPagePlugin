@@ -125,8 +125,6 @@
         </div>
 	<?php } ?>
 
-    <input type="hidden" name="ID" value="<?php echo esc_html($userData->ID); ?>">
-
     <input id="form-user-button" type="submit" value="Save">
 
 </form>

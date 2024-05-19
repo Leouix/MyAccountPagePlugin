@@ -20,7 +20,7 @@ if (!empty($user_comments)) {
 
     echo sprintf(
 	    '<p class="comment-date">Date: %s</p>',
-	    esc_html(date('Y-m-d H:i', strtotime($comment->comment_date)))
+	    esc_html(gmdate('Y-m-d H:i', strtotime($comment->comment_date)))
     );
 
     echo sprintf('<p class="comment-author">Author: %s</p>', esc_html($comment->comment_author));

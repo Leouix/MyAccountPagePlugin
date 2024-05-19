@@ -51,12 +51,7 @@ function saveMyAccountSettingsForm(elForm) {
 		if (this.readyState === 4 && this.status === 200) {
 			// console.log(this.response)
 			successAjaxButtonEvent("success")
-
-			urlInput.disabled = true
-			dashiconsLock.classList.remove('hidden')
-			dashiconsLock.classList.add('visible')
-			dashiconsUnlock.classList.remove('visible')
-			dashiconsUnlock.classList.add('hidden')
+			lockLinkField()
 
 			// let json = JSON.parse(this.response)
 			// containerResults.innerHTML = json.html
@@ -66,6 +61,14 @@ function saveMyAccountSettingsForm(elForm) {
 		}
 	}
 	xhr.send(formData);
+}
+
+function lockLinkField() {
+	urlInput.disabled = true
+	dashiconsLock.classList.remove('hidden')
+	dashiconsLock.classList.add('visible')
+	dashiconsUnlock.classList.remove('visible')
+	dashiconsUnlock.classList.add('hidden')
 }
 
 function successAjaxButtonEvent(statusClass) {
