@@ -230,9 +230,10 @@ class My_Account_Page {
 
 		if ( ! empty( $pluginData ) && ! empty( $pluginData->user_page_url ) ) {
 			$url = $pluginData->user_page_url;
+			$url = trim($url, '/');
 		}
 
-		return trim($url, '/');
+		return $url;
 	}
 
 	public function isCurrentAdminPageUrl() {

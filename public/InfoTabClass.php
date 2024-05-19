@@ -44,7 +44,7 @@ class InfoTabClass {
 		try {
 			return wp_update_user( $userData );
 		} catch ( \Exception $e ) {
-			throw new \Exception($e->getMessage(), $e->getCode());
+			throw new \Exception(esc_html($e->getMessage()), esc_html($e->getCode()));
 		}
 	}
 
@@ -57,7 +57,7 @@ class InfoTabClass {
 				update_user_meta( $userId, $key, $value );
 			}
 		} catch (\Exception $e) {
-			throw new \Exception( $e->getMessage() );
+			throw new \Exception(esc_html($e->getMessage()), esc_html($e->getCode()));
 		}
 
 	}
