@@ -1,5 +1,3 @@
-console.log('js file')
-
 let containerResults;
 let userFormClassObject;
 let tabButton1;

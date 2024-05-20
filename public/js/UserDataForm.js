@@ -1,5 +1,3 @@
-console.log('class')
-
 class UserDataForm {
 
     user = {}

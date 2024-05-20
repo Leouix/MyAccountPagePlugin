@@ -44,17 +44,25 @@ class AdminSettingsClass {
 	 * @return bool
 	 */
 	public function isPluginTableExists() {
-
 		global $wpdb;
 		$table_name = $wpdb->base_prefix . 'my_account_page_plugin';
-		$query      = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table_name ) );
+		$cache_key = 'is_plugin_table_exists';
+		$cache_group = 'my_account_page_plugin';
 
-		if ( ! $wpdb->get_var( $query ) == $table_name ) {
-			return false;
-		} else {
-			return true;
+		$is_table_exists = wp_cache_get($cache_key, $cache_group);
+
+		if ($is_table_exists === false) {
+			$query = $wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($table_name));
+			$result = $wpdb->get_var($query);
+
+			$is_table_exists = ($result == $table_name);
+
+			wp_cache_set($cache_key, $is_table_exists, $cache_group, 3600);
 		}
+
+		return $is_table_exists;
 	}
+
 
 	private function save($postData) {
 		$fields_allowed = $postData['show_user_fields_checkbox'] ?? '';
@@ -126,46 +134,59 @@ class AdminSettingsClass {
 		include plugin_dir_path(dirname(__FILE__)) . 'admin/AdminSettingsPage.php';
 	}
 
-
 	public function getSettingFieldsAllowedJson() {
+		$cache_key = 'setting_fields_allowed_json';
+		$cache_group = 'my_account_page_plugin';
 
-		global $wpdb;
-		$tablename = $wpdb->prefix . "my_account_page_plugin";
-		$sql       = /** @lang text */
-			"SELECT `fields_allowed_json` FROM `" . $tablename . "`";
-		$results   = $wpdb->get_results( $sql );
+		$fields_allowed_json = wp_cache_get($cache_key, $cache_group);
 
-		$pluginData = $results[0] ?? [];
+		if ($fields_allowed_json === false) {
+			global $wpdb;
+			$tablename = $wpdb->prefix . "my_account_page_plugin";
+			$sql       = /** @lang text */
+				"SELECT `fields_allowed_json` FROM `" . $tablename . "`";
+			$results = $wpdb->get_results($sql);
 
-		return json_decode( $pluginData->fields_allowed_json ) !== ''
-			? json_decode( $pluginData->fields_allowed_json )
-			: [];
+			$pluginData = $results[0] ?? [];
+
+			$fields_allowed_json = !empty($pluginData->fields_allowed_json)
+				? $pluginData->fields_allowed_json
+				: '[]';
+
+			wp_cache_set($cache_key, $fields_allowed_json, $cache_group, 3600);
+		}
+
+		return json_decode($fields_allowed_json);
 	}
+
 
 	/**
 	 * @return string|null
 	 */
 	public function getSettingUrl() {
-
 		$url = null;
 
-		if ( $this->isPluginTableExists() ) {
-			global $wpdb;
-			$tablename = $wpdb->prefix . "my_account_page_plugin";
-			$sql       = /** @lang text */
-				"SELECT `user_page_url` FROM `" . $tablename ."`";
-			$results   = $wpdb->get_results( $sql );
+		if ($this->isPluginTableExists()) {
+			$cache_key = 'my_account_page_plugin_user_page_url';
+			$url = wp_cache_get($cache_key);
 
-			$pluginData = $results[0] ?? null;
+			if ($url === false) {
+				global $wpdb;
+				$tablename = $wpdb->prefix . "my_account_page_plugin";
+				$sql       = /** @lang text */
+					"SELECT `user_page_url` FROM `" . $tablename ."`";
+				$results = $wpdb->get_results($sql);
+				$pluginData = $results[0] ?? null;
 
-			if ( ! empty( $pluginData ) && ! empty( $pluginData->user_page_url ) ) {
-				$url = $pluginData->user_page_url;
+				if (!empty($pluginData) && !empty($pluginData->user_page_url)) {
+					$url = $pluginData->user_page_url;
+					wp_cache_set($cache_key, $url, '', 3600);
+				}
 			}
-
 		}
-
 		return $url;
 	}
+
 
 	public function createDBTable() {
 		global $wpdb;

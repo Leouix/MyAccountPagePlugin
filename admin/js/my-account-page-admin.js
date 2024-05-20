@@ -1,4 +1,3 @@
-console.log('admin js')
 let formUserButton
 let successNotice
 let lockUrlIcon
