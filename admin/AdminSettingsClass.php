@@ -56,27 +56,34 @@ class AdminSettingsClass {
 		}
 	}
 
-	private function save( $postData ) {
-
+	private function save($postData) {
 		$fields_allowed = $postData['show_user_fields_checkbox'] ?? '';
-		$data           = array(
-			'fields_allowed_json' => json_encode( $fields_allowed )
+		$data = array(
+			'fields_allowed_json' => wp_json_encode($fields_allowed)
 		);
 
-		if ( ! empty( $postData['mya_url'] ) ) {
+		if (!empty($postData['mya_url'])) {
 			$data['user_page_url'] = $postData['mya_url'];
 		}
 
 		global $wpdb;
 		$tablename = $wpdb->prefix . "my_account_page_plugin";
-		$wpdb->update(
+
+		$updated = $wpdb->update(
 			$tablename,
 			$data,
-			array( 'ID' => $this->loggedUserId ),
-			array( '%s', '%s' ),
-			array( '%d' )
+			array('ID' => $this->loggedUserId),
+			array('%s', '%s'),
+			array('%d')
 		);
+
+		if ($updated !== false) {
+			$cache_key = 'my_account_page_plugin_settings';
+			$cache_group = 'my_account_page_plugin';
+			wp_cache_delete($cache_key, $cache_group);
+		}
 	}
+
 
 	/**
 	 * @throws Exception
@@ -91,28 +98,34 @@ class AdminSettingsClass {
 	 * @return void
 	 */
 	public function getMyAccountSettingsPage() {
-
-		$pluginData           = [];
+		$pluginData = [];
 		$fields_allowed_array = [];
 
-		if ( $this->isPluginTableExists() ) {
-			global $wpdb;
-			$tablename = $wpdb->prefix . "my_account_page_plugin";
-			$sql       = /** @lang text */
-				"SELECT * FROM " . $tablename;
-			$results   = $wpdb->get_results( $sql );
+		if ($this->isPluginTableExists()) {
+			$cache_key = 'my_account_page_plugin_settings';
+			$cache_group = 'my_account_page_plugin';
+			$pluginData = wp_cache_get($cache_key, $cache_group);
 
-			$pluginData = $results[0] ?? [];
+			if ($pluginData === false) {
+				global $wpdb;
+				$tablename = $wpdb->prefix . "my_account_page_plugin";
+				$sql       = /** @lang text */
+					"SELECT * FROM " . $tablename;
+				$results = $wpdb->get_results($sql);
+				$pluginData = $results[0] ?? [];
+				wp_cache_set($cache_key, $pluginData, $cache_group, 3600);
+			}
 
-			if ( ! empty( $pluginData ) ) {
-				$fields_allowed_array = json_decode( $pluginData->fields_allowed_json ) !== ''
-					? json_decode( $pluginData->fields_allowed_json )
+			if (!empty($pluginData)) {
+				$fields_allowed_array = json_decode($pluginData->fields_allowed_json) !== ''
+					? json_decode($pluginData->fields_allowed_json)
 					: [];
 			}
 		}
 
-		include plugin_dir_path( dirname( __FILE__ ) ) . 'admin/AdminSettingsPage.php';
+		include plugin_dir_path(dirname(__FILE__)) . 'admin/AdminSettingsPage.php';
 	}
+
 
 	public function getSettingFieldsAllowedJson() {
 
@@ -184,7 +197,7 @@ class AdminSettingsClass {
 			$tablename,
 			array(
 				'user_page_url'       => 'my-account',
-				'fields_allowed_json' => json_encode( '' )
+				'fields_allowed_json' => wp_json_encode( '' )
 			),
 			array( '%s', '%s' ),
 		);

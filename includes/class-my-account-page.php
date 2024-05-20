@@ -219,14 +219,20 @@ class My_Account_Page {
 	public function getPublicPageUrl() {
 
 		$url = null;
+		$cache_key = 'my_account_page_plugin_user_page_url';
+		$cache_group = 'my_account_page_plugin';
 
-		global $wpdb;
-		$tablename = $wpdb->prefix . "my_account_page_plugin";
-		$sql       = /** @lang text */
-			"SELECT `user_page_url` FROM `" . $tablename . "`";
-		$results   = $wpdb->get_results( $sql );
+		$pluginData = wp_cache_get($cache_key, $cache_group);
 
-		$pluginData = $results[0] ?? null;
+		if ($pluginData === false) {
+			global $wpdb;
+			$tablename = $wpdb->prefix . "my_account_page_plugin";
+			$sql       = /** @lang text */
+				"SELECT `user_page_url` FROM `" . $tablename . "`";
+			$results = $wpdb->get_results($sql);
+			$pluginData = $results[0] ?? null;
+			wp_cache_set($cache_key, $pluginData, $cache_group, 3600);
+		}
 
 		if ( ! empty( $pluginData ) && ! empty( $pluginData->user_page_url ) ) {
 			$url = $pluginData->user_page_url;
