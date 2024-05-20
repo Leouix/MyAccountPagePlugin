@@ -49,7 +49,7 @@ class AdminSettingsClass {
 		}
 
 		$this->save( $postData );
-		$this->createMyAccountPagePublic();
+		$this->createMyAccountPagePublic($postData['mya_url']);
 	}
 
 	/**
@@ -199,10 +199,9 @@ class AdminSettingsClass {
 		);
 	}
 
-	public function createMyAccountPagePublic() {
-		$postDataUrl = $this->getSettingUrl();
+	public function createMyAccountPagePublic($mya_url) {
 
-		$check_page_exist = $this->getPluginPublicPage( $postDataUrl );
+		$check_page_exist = $this->getPluginPublicPage( $mya_url );
 		if ( $check_page_exist === null ) {
 			wp_insert_post(
 				array(
@@ -210,7 +209,7 @@ class AdminSettingsClass {
 					'ping_status'    => 'close',
 					'post_author'    => 1,
 					'post_title'     => ucwords( 'my-account' ),
-					'post_name'      => strtolower( str_replace( ' ', '-', trim( $postDataUrl ) ) ),
+					'post_name'      => strtolower( str_replace( ' ', '-', trim( $mya_url ) ) ),
 					'post_status'    => 'publish',
 					'post_content'   => '',
 					'post_type'      => 'page'
