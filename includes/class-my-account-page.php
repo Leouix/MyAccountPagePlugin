@@ -243,8 +243,6 @@ class My_Account_Page {
 	}
 
 	public function isCurrentAdminPageUrl() {
-		// http://localhost/wp-admin/admin.php?page=my-account-page-admin
-
 		$current_url = $_SERVER['REQUEST_URI'];
 		return strpos($current_url, '/admin.php?page=my-account-page-admin') !== false;
 

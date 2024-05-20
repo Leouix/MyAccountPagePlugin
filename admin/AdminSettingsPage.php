@@ -2,7 +2,7 @@
 
 /**
  * @var array $fields_allowed_array
- * @var array $pluginData
+ * @var string $user_page_url
  */
 
 ?>
@@ -18,7 +18,7 @@
 	            <span><?php echo sprintf('%s', esc_url(get_bloginfo('url'))); ?>/</span><input id="adu-form-input"
                        type="text"
                        name="mya_url"
-                       value="<?php echo sprintf('%s', esc_html($pluginData->user_page_url)); ?>"
+                       value="<?php echo sprintf('%s', esc_html($user_page_url)); ?>"
                        disabled
                 ><div id="lock-url"><div id="dashicons-unlock" class="dashicons dashicons-unlock hidden"></div><div id="dashicons-lock" class="dashicons dashicons-lock visible"></div></div>
             </div>
