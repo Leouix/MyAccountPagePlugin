@@ -20,9 +20,9 @@ class AdminSettingsClass {
 		"fields_allowed_json" => null,
 	];
 
-	public function __construct( $loggedUserId ) {
+	public function __construct( $loggedUserId, $adminSettings ) {
 		$this->loggedUserId = $loggedUserId;
-		$this->adminSettings = $this->getAdminPluginSettings();
+		$this->adminSettings = $adminSettings;
 	}
 
 	/**
@@ -125,32 +125,7 @@ class AdminSettingsClass {
 		include plugin_dir_path(dirname(__FILE__)) . 'admin/AdminSettingsPage.php';
 	}
 
-	public function getAdminPluginSettings() {
 
-		$cache_key = 'my_account_page_plugin_settings';
-		$cache_group = 'my_account_page_plugin';
-		$pluginData = wp_cache_get($cache_key, $cache_group);
-
-		if ($pluginData === false) {
-			global $wpdb;
-			$tablename = $wpdb->prefix . "my_account_page_plugin";
-			$sql       = /** @lang text */
-				"SELECT * FROM " . $tablename;
-			$results = $wpdb->get_results($sql);
-			$pluginData = $results[0] ?? [];
-			wp_cache_set($cache_key, $pluginData, $cache_group, 3600);
-		}
-
-		$adminPluginSettings = [];
-		if (!empty($pluginData)) {
-			$adminPluginSettings["fields_allowed_json"] = json_decode($pluginData->fields_allowed_json) !== ''
-				? json_decode($pluginData->fields_allowed_json)
-				: [];
-
-			$adminPluginSettings["user_page_url"] = $pluginData->user_page_url ?? null;
-		}
-		return $adminPluginSettings;
-	}
 
 	public function getSettingFieldsAllowedJson() {
 		return $this->adminSettings["fields_allowed_json"];

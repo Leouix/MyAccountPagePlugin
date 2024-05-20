@@ -2,15 +2,19 @@
 
 namespace MyAccountPublic;
 
-use MyAccountAdmin\AdminSettingsClass;
 use stdClass;
 
 class InfoTabClass {
 
 	private $loggedUserId;
+	/**
+	 * @var mixed
+	 */
+	private $adminSettings;
 
-	public function __construct($loggedUserId) {
+	public function __construct($loggedUserId,  $adminSettings) {
 		$this->loggedUserId = $loggedUserId;
+		$this->adminSettings = $adminSettings;
 	}
 
 	/**
@@ -73,8 +77,7 @@ class InfoTabClass {
 		];
 
 		$user_data = get_userdata($this->loggedUserId);
-		$adminSettings = new AdminSettingsClass($this->loggedUserId);
-		$allowedFields = $adminSettings->getSettingFieldsAllowedJson();
+		$allowedFields = $this->adminSettings["fields_allowed_json"];
 
 		$userData = new stdClass();
 		$userData->ID = $user_data->ID;

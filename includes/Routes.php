@@ -13,6 +13,14 @@ class Routes {
 	 * @var mixed
 	 */
 	private $current_user;
+	/**
+	 * @var mixed
+	 */
+	private $adminSettings;
+
+	public function __construct($adminSettings) {
+		$this->adminSettings = $adminSettings;
+	}
 
 	public function routeReg() {
 
@@ -57,7 +65,7 @@ class Routes {
 
 		$postData = $request->get_params();
 
-		$adminManager = new AdminSettingsClass($this->current_user);
+		$adminManager = new AdminSettingsClass($this->current_user, $this->adminSettings);
 
 		$adminManager->handleSaving($postData);
 	}
@@ -68,7 +76,7 @@ class Routes {
 	public function savePublicUserInfo( $request ) {
 		$this->userLoggedValidate($request);
 		$postData = $request->get_params();
-		$infoTabClass = new InfoTabClass($this->current_user);
+		$infoTabClass = new InfoTabClass($this->current_user,  $this->adminSettings);
 		$infoTabClass->handleUserSaving($postData);
 	}
 
@@ -122,8 +130,7 @@ class Routes {
 	}
 
 	private function infoTab() {
-		$infoTabClass = new InfoTabClass($this->current_user);
-
+		$infoTabClass = new InfoTabClass($this->current_user, $this->adminSettings);
 		return $infoTabClass->getUserData();
 	}
 

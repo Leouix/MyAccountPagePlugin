@@ -59,6 +59,7 @@ class My_Account_Page {
 	 * @var      string $version The current version of the plugin.
 	 */
 	protected $version;
+	private $adminSettings;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -77,11 +78,39 @@ class My_Account_Page {
 		}
 		$this->plugin_name = 'my-account-page';
 
+		$this->adminSettings = $this->getAdminPluginSettings();
+
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+	}
 
+	private function getAdminPluginSettings() {
+
+		$cache_key = 'my_account_page_plugin_settings';
+		$cache_group = 'my_account_page_plugin';
+		$pluginData = wp_cache_get($cache_key, $cache_group);
+
+		if ($pluginData === false) {
+			global $wpdb;
+			$tablename = $wpdb->prefix . "my_account_page_plugin";
+			$sql       = /** @lang text */
+				"SELECT * FROM " . $tablename;
+			$results = $wpdb->get_results($sql);
+			$pluginData = $results[0] ?? [];
+			wp_cache_set($cache_key, $pluginData, $cache_group, 3600);
+		}
+
+		$adminPluginSettings = [];
+		if (!empty($pluginData)) {
+			$adminPluginSettings["fields_allowed_json"] = json_decode($pluginData->fields_allowed_json) !== ''
+				? json_decode($pluginData->fields_allowed_json)
+				: [];
+
+			$adminPluginSettings["user_page_url"] = $pluginData->user_page_url ?? null;
+		}
+		return $adminPluginSettings;
 	}
 
 	/**
@@ -175,8 +204,7 @@ class My_Account_Page {
 	}
 
 	public function add_menu_page_my_account_page() {
-
-		$adminSettings = new AdminSettingsClass(get_current_user_id());
+		$adminSettings = new AdminSettingsClass(get_current_user_id(), $this->adminSettings);
 		add_menu_page(
 			'My Account Page',
 			'My Account Page',
@@ -205,7 +233,7 @@ class My_Account_Page {
 			 $this->loader->add_action('init', $this, 'my_custom_add_user_id_to_query_vars');
 		 }
 
-		$routesClass = new Routes();
+		$routesClass = new Routes($this->adminSettings);
 		$this->loader->add_action( 'rest_api_init', $routesClass, 'routeReg' );
 
 		$this->loader->add_action('template_include', $this, 'showPluginContent');
@@ -217,29 +245,7 @@ class My_Account_Page {
 	}
 
 	public function getPublicPageUrl() {
-
-		$url = null;
-		$cache_key = 'my_account_page_plugin_user_page_url';
-		$cache_group = 'my_account_page_plugin';
-
-		$pluginData = wp_cache_get($cache_key, $cache_group);
-
-		if ($pluginData === false) {
-			global $wpdb;
-			$tablename = $wpdb->prefix . "my_account_page_plugin";
-			$sql       = /** @lang text */
-				"SELECT `user_page_url` FROM `" . $tablename . "`";
-			$results = $wpdb->get_results($sql);
-			$pluginData = $results[0] ?? null;
-			wp_cache_set($cache_key, $pluginData, $cache_group, 3600);
-		}
-
-		if ( ! empty( $pluginData ) && ! empty( $pluginData->user_page_url ) ) {
-			$url = $pluginData->user_page_url;
-			$url = trim($url, '/');
-		}
-
-		return $url;
+		return $this->adminSettings["user_page_url"];
 	}
 
 	public function isCurrentAdminPageUrl() {
