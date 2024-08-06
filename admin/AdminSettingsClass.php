@@ -31,10 +31,6 @@ class AdminSettingsClass {
 	public function handleSaving( $postData ) {
 		// $this->validateInputData($postData);
 
-
-//        $exampleVar = array('key1' => 'value1', 'key2' => 'value2');
-//        $this->log_variable($exampleVar, 'Example Array');
-
 		if ( ! $this->isPluginTableExists() ) {
             (new DBCreator)->createDBTable();
 		}
