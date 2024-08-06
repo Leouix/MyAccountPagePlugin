@@ -10,6 +10,9 @@
  * @subpackage My_Account_Page/includes
  */
 
+use MyAccountAdmin\AdminSettingsClass;
+use MyAccountAdmin\DBCreator;
+
 /**
  * Fired during plugin activation.
  *
@@ -30,6 +33,7 @@ class My_Account_Page_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
+        (new DBCreator)->createDBTable();
 	}
 
 }

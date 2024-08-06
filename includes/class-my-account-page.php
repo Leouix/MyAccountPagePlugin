@@ -156,6 +156,7 @@ class My_Account_Page {
 
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/Routes.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/AdminSettingsClass.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/DBCreator.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/InfoTabClass.php';
 
 		$this->loader = new My_Account_Page_Loader();

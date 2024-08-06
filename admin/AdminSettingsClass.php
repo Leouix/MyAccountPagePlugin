@@ -36,7 +36,7 @@ class AdminSettingsClass {
 //        $this->log_variable($exampleVar, 'Example Array');
 
 		if ( ! $this->isPluginTableExists() ) {
-			$this->createDBTable();
+            (new DBCreator)->createDBTable();
 		}
 
 		$this->checkPublicPage( $postData );
