@@ -75,7 +75,6 @@ class AdminSettingsClass {
 		return $is_table_exists;
 	}
 
-
 	private function save($postData) {
 		$fields_allowed = $postData['show_user_fields_checkbox'] ?? '';
 		$data = array(
@@ -106,7 +105,6 @@ class AdminSettingsClass {
 		}
 	}
 
-
 	/**
 	 * @throws Exception
 	 */
@@ -125,8 +123,6 @@ class AdminSettingsClass {
 		include plugin_dir_path(dirname(__FILE__)) . 'admin/AdminSettingsPage.php';
 	}
 
-
-
 	public function getSettingFieldsAllowedJson() {
 		return $this->adminSettings["fields_allowed_json"];
 	}
@@ -136,42 +132,6 @@ class AdminSettingsClass {
 	 */
 	public function getSettingUrl() {
 		return $this->adminSettings["user_page_url"];
-	}
-
-	public function createDBTable() {
-		global $wpdb;
-
-		$charset_collate = $wpdb->get_charset_collate();
-
-		$table_name = $wpdb->prefix . "my_account_page_plugin";
-
-		$sql = /** @lang text */
-			"CREATE TABLE IF NOT EXISTS $table_name (
-			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			user_page_url varchar(255) NOT NULL,
-			fields_allowed_json varchar(255) NULL,
-			is_comments_allowed tinyint NULL,
-			is_users_allowed tinyint NULL,
-			PRIMARY KEY  (id)
-        ) $charset_collate;";
-
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		dbDelta( $sql );
-
-		$this->insertEmptyData();
-	}
-
-	private function insertEmptyData() {
-		global $wpdb;
-		$tablename = $wpdb->prefix . "my_account_page_plugin";
-		$wpdb->insert(
-			$tablename,
-			array(
-				'user_page_url'       => 'my-account',
-				'fields_allowed_json' => wp_json_encode( '' )
-			),
-			array( '%s', '%s' ),
-		);
 	}
 
 	public function createMyAccountPagePublic($mya_url) {
