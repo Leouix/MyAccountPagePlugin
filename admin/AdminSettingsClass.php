@@ -32,11 +32,8 @@ class AdminSettingsClass {
 		// $this->validateInputData($postData);
 
 
-        var_dump('11111111111111111111111111111');
-
-
-        $exampleVar = array('key1' => 'value1', 'key2' => 'value2');
-        $this->log_variable($exampleVar, 'Example Array');
+//        $exampleVar = array('key1' => 'value1', 'key2' => 'value2');
+//        $this->log_variable($exampleVar, 'Example Array');
 
 		if ( ! $this->isPluginTableExists() ) {
 			$this->createDBTable();
@@ -209,7 +206,7 @@ class AdminSettingsClass {
 		return get_page_by_path( $postDataUrl );
     }
 
-    function log_variable($variable, $label = '')
+    private function log_variable($variable, $label = '')
     {
         var_dump('222222222222222222222222222222222222222222222');
         // Преобразуем переменную в строку для записи в лог
