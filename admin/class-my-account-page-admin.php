@@ -52,7 +52,7 @@ class My_Account_Page_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
-	}
+    }
 
 	/**
 	 * Register the stylesheets for the admin area.

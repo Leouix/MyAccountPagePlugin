@@ -31,6 +31,13 @@ class AdminSettingsClass {
 	public function handleSaving( $postData ) {
 		// $this->validateInputData($postData);
 
+
+        var_dump('11111111111111111111111111111');
+
+
+        $exampleVar = array('key1' => 'value1', 'key2' => 'value2');
+        $this->log_variable($exampleVar, 'Example Array');
+
 		if ( ! $this->isPluginTableExists() ) {
 			$this->createDBTable();
 		}
@@ -200,5 +207,24 @@ class AdminSettingsClass {
 	 */
 	public function getPluginPublicPage( $postDataUrl ) {
 		return get_page_by_path( $postDataUrl );
-	}
+    }
+
+    function log_variable($variable, $label = '')
+    {
+        var_dump('222222222222222222222222222222222222222222222');
+        // Преобразуем переменную в строку для записи в лог
+        $output = print_r($variable, true);
+
+        // Добавляем метку, если она предоставлена
+        if (!empty($label)) {
+            $output = "[$label] " . $output;
+        }
+
+        // Форматируем строку лога с текущей датой и временем
+        $logEntry = "[" . date('Y-m-d H:i:s') . "] " . $output . PHP_EOL;
+
+        // Записываем строку в файл file-log.txt
+        file_put_contents('file-log.txt', $logEntry, FILE_APPEND);
+    }
+
 }

@@ -53,7 +53,7 @@ class Routes {
 	 * @throws Exception
 	 */
 	public function adminSavePageSettings($request) {
-
+        var_dump('7777777777777777777777777');
 
 		$attrs =  $request->get_attributes();
 
@@ -65,6 +65,7 @@ class Routes {
 
 		$postData = $request->get_params();
 
+        var_dump('6666666666666666666666666');
 		$adminManager = new AdminSettingsClass($this->current_user, $this->adminSettings);
 
 		$adminManager->handleSaving($postData);
