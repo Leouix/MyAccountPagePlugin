@@ -164,7 +164,7 @@ class AdminSettingsClass {
 
     private function log_variable($variable, $label = '')
     {
-        var_dump('222222222222222222222222222222222222222222222');
+        // var_dump('222222222222222222222222222222222222222222222');
         // Преобразуем переменную в строку для записи в лог
         $output = print_r($variable, true);
 
