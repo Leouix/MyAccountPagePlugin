@@ -5,6 +5,7 @@
 
 .au-container {
     padding: 25px 15px;
+    height: 100vw;
 }
 #admin-user-account-form input[type=submit] {
     margin-top: 15px;

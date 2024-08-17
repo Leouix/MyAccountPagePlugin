@@ -112,8 +112,6 @@ class AdminSettingsClass {
 	 */
 	private function validateInputData( $postData ) {
 
-//		$this->llog('$postData', $postData);
-
 		$expectedFields = array(
 			'user_nicename',
 			'user_email',
