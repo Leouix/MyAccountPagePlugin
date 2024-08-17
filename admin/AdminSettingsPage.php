@@ -21,7 +21,14 @@
                        value="<?php echo sprintf('%s', esc_html($user_page_url)); ?>"
                        disabled
                 ><div id="lock-url"><div id="dashicons-unlock" class="dashicons dashicons-unlock hidden"></div><div id="dashicons-lock" class="dashicons dashicons-lock visible"></div></div>
-            </div>
+
+                <a id="adu-form-input-text"
+                   href="<?php echo sprintf('%s', esc_url(get_bloginfo('url'))); ?>/<?php echo sprintf('%s', esc_html($user_page_url)); ?>"
+                   target="_blank"
+                >
+	                <?php echo sprintf('%s', esc_url(get_bloginfo('url'))); ?>/<?php echo sprintf('%s', esc_html($user_page_url)); ?>
+                </a>
+
 		</div>
 
 		<div  class="sub-title">Which fields should be shown in the user account?</div>

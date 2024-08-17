@@ -29,7 +29,7 @@ class AdminSettingsClass {
 	 * @throws Exception
 	 */
 	public function handleSaving( $postData ) {
-		// $this->validateInputData($postData);
+		$postData = $this->validateInputData($postData);
 
 		if ( ! $this->isPluginTableExists() ) {
             (new DBCreator)->createDBTable();
@@ -39,18 +39,20 @@ class AdminSettingsClass {
 	}
 
 	public function checkPublicPage( $postData ) {
+    if ( $this->adminSettings["user_page_url"] !== null
+         && ! empty( $postData['mya_url'] )
+         &&  $this->adminSettings["user_page_url"] !== sanitize_text_field($postData['mya_url'])
+    ) {
+        $oldPluginPublicPage = $this->getPluginPublicPage(  $this->adminSettings["user_page_url"] );
+        wp_delete_post( $oldPluginPublicPage->ID, true );
+    }
 
-		if ( $this->adminSettings["user_page_url"] !== null
-		     && ! empty( $postData['mya_url'] )
-		     &&  $this->adminSettings["user_page_url"] !== $postData['mya_url']
-		) {
-			$oldPluginPublicPage = $this->getPluginPublicPage(  $this->adminSettings["user_page_url"] );
-			wp_delete_post( $oldPluginPublicPage->ID, true );
-		}
+    $this->save( $postData );
 
-		$this->save( $postData );
-		$this->createMyAccountPagePublic($postData['mya_url']);
+	if (!empty( $postData['mya_url'])) {
+		$this->createMyAccountPagePublic(sanitize_text_field($postData['mya_url']));
 	}
+}
 
 	/**
 	 * @return bool
@@ -76,9 +78,9 @@ class AdminSettingsClass {
 	}
 
 	private function save($postData) {
-		$fields_allowed = $postData['show_user_fields_checkbox'] ?? '';
+	//	$fields_allowed = $postData['show_user_fields_checkbox'] ?? '';
 		$data = array(
-			'fields_allowed_json' => wp_json_encode($fields_allowed)
+			'fields_allowed_json' => wp_json_encode($postData)
 		);
 
 		if (!empty($postData['mya_url'])) {
@@ -109,9 +111,37 @@ class AdminSettingsClass {
 	 * @throws Exception
 	 */
 	private function validateInputData( $postData ) {
-		if ( empty( $postData['mya_url'] ) ) {
-			throw new Exception( 'Please enter mya_url' );
+
+//		$this->llog('$postData', $postData);
+
+		$expectedFields = array(
+			'user_nicename',
+			'user_email',
+			'user_registered',
+			'display_name',
+			'user_url',
+			'nickname',
+			'first_name',
+			'last_name',
+			'description'
+		);
+
+		// Check if show_user_fields_checkbox is set and is an array
+		if (!isset($postData['show_user_fields_checkbox']) || !is_array($postData['show_user_fields_checkbox'])) {
+			throw new Exception('Invalid checkbox data');
 		}
+
+		// Check if all selected fields are in the expectedFields array
+		foreach ($postData['show_user_fields_checkbox'] as $field) {
+			if (!in_array($field, $expectedFields)) {
+				throw new Exception(sprintf('Invalid checkbox field: %s', $field));
+			}
+		}
+
+		// Sanitize the checkbox fields
+		return array_map(function ($field) {
+			return sanitize_text_field($field);
+		}, $postData['show_user_fields_checkbox']);
 	}
 
 	/**
@@ -179,5 +209,11 @@ class AdminSettingsClass {
         // Записываем строку в файл file-log.txt
         file_put_contents('file-log.txt', $logEntry, FILE_APPEND);
     }
+
+	public function llog($stringName, $var) {
+		echo $stringName . ": ";
+		print_r($var);
+		echo PHP_EOL;
+	}
 
 }
