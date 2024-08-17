@@ -35,7 +35,7 @@ class DBCreator
             $tablename,
             array(
                 'user_page_url'       => 'my-account',
-                'fields_allowed_json' => wp_json_encode( '' )
+                'fields_allowed_json' => wp_json_encode( ["display_name","user_url","nickname","description"] )
             ),
             array( '%s', '%s' ),
         );

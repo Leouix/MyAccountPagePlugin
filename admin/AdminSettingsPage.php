@@ -34,24 +34,6 @@
 		<div  class="sub-title">Which fields should be shown in the user account?</div>
 
 		<div class="label-area">
-			<input type="checkbox" id="adu-user-nicename" name="show_user_fields_checkbox[]" value="user_nicename"  <?php echo sprintf('%s', in_array("user_nicename", $fields_allowed_array) ? "checked" : '');
-			?>>
-			<label for="adu-user-nicename"> user_nicename</label><br>
-		</div>
-
-		<div class="label-area">
-			<input type="checkbox" id="adu-user-email" name="show_user_fields_checkbox[]" value="user_email"  <?php echo sprintf('%s', in_array("user_email", $fields_allowed_array) ? "checked" : '');
-			?>>
-			<label for="adu-user-email"> user_email</label><br>
-		</div>
-
-
-		<div class="label-area">
-			<input type="checkbox" id="adu-user-registered" name="show_user_fields_checkbox[]" value="user_registered"  <?php echo sprintf('%s', in_array("user_registered", $fields_allowed_array) ? "checked" : ''); ?>>
-			<label for="adu-user-registered">user_registered</label><br>
-		</div>
-
-		<div class="label-area">
 			<input type="checkbox" id="adu-display_name" name="show_user_fields_checkbox[]" value="display_name" <?php echo sprintf('%s', in_array("display_name", $fields_allowed_array) ? "checked" : '');
 			?>>
 			<label for="adu-display_name">display_name</label><br>

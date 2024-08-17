@@ -21,12 +21,12 @@
         <div id="tab-button-1"
              class="main-tabs-item"
              onclick="switchTab(this)">
-            <div class="text">My Comments</div>
+            <div class="text">Comments</div>
         </div>
         <div id="tab-button-3"
              class="main-tabs-item"
              onclick="switchTab(this)">
-            <div class="text">Info</div>
+            <div class="text">My Info</div>
         </div>
     </div>
 

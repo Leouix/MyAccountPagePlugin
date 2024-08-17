@@ -30,7 +30,7 @@
 #main-tabs .main-tabs-item .text {
     rotate: -90deg;
     width: 100%;
-    margin-bottom: -35px;
+    min-width: 85px;
     font-size: 16px;
     line-height: 1.1;
     color: #060606;
@@ -39,6 +39,7 @@
 .au-container {
     padding: 25px;
     background: #383838;
+    height: 100vh;
 }
 
 @media screen and (min-width: 430px) {
