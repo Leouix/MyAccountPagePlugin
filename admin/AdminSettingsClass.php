@@ -114,8 +114,6 @@ class AdminSettingsClass {
 
 		$expectedFields = array(
 			'user_nicename',
-			'user_email',
-			'user_registered',
 			'display_name',
 			'user_url',
 			'nickname',

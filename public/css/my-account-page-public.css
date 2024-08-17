@@ -97,6 +97,7 @@ html[data-darkreader-scheme="dark"] #main-tabs .main-tabs-item.active {
 .au-comment-area p {
     margin: 10px 0;
     font-size: 16px;
+    color: #cfc6c6;
 }
 
 /*@media screen and (min-width: 430px) {*/

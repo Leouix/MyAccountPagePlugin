@@ -212,7 +212,7 @@ class My_Account_Page {
 			'administrator',
 			'my-account-page-admin',
 			[$adminSettings, 'getMyAccountSettingsPage'],
-			'dashicons-admin-generic'
+			'dashicons-admin-users'
 		);
 	}
 
